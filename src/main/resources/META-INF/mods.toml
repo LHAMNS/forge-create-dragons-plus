@@ -1,0 +1,33 @@
+modLoader="javafml"
+loaderVersion="[47,)"
+license="LGPL-3.0-or-later"
+issueTrackerURL="https://github.com/DragonsPlusMinecraft/CreateDragonsPlus/issues"
+
+[[mods]]
+modId="create_dragons_plus"
+version="1.0.0"
+displayName="Forge-Create: Dragons Plus"
+authors="DragonsPlusMinecraft (Ported to Forge 1.20.1)"
+description='''Bulk coloring, freezing, sanding, ending via fan processing. Dragon's breath fluid, dye fluids, fluid hatch.'''
+# Originally developed for NeoForge 1.21.1 by DragonsPlusMinecraft, ported to Forge 1.20.1 under LGPL-3.0-or-later.
+
+[[dependencies.create_dragons_plus]]
+    modId="forge"
+    mandatory=true
+    versionRange="[47,)"
+    ordering="NONE"
+    side="BOTH"
+
+[[dependencies.create_dragons_plus]]
+    modId="minecraft"
+    mandatory=true
+    versionRange="[1.20.1,1.21)"
+    ordering="NONE"
+    side="BOTH"
+
+[[dependencies.create_dragons_plus]]
+    modId="create"
+    mandatory=true
+    versionRange="[0.5.1,)"
+    ordering="AFTER"
+    side="BOTH"

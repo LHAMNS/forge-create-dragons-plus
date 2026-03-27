@@ -1,0 +1,42 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "plus.dragons.createdragonsplus.mixin",
+  "compatibilityLevel": "JAVA_17",
+  "refmap": "create_dragons_plus.refmap.json",
+  "plugin": "plus.dragons.createdragonsplus.mixin.CDPMixinConfigPlugin",
+  "mixins": [
+    "create.AirCurrentMixin",
+    "create.AirCurrentMixin$AirCurrentSegmentMixin",
+    "create.BlockEntityBehaviourMixin",
+    "create.ContraptionMixin",
+    "create.FanProcessingAccessor",
+    "create.FanProcessingTypeMixin",
+    "create.FluidFillingBehaviourMixin",
+    "create.MechanicalMixerBlockEntityMixin",
+    "create.OpenEndedPipeMixin",
+    "create.OpenEndFluidHandlerMixin",
+    "create.PotionMixingRecipesMixin",
+    "minecraft.BottleItemMixin",
+    "minecraft.ConcretePowderBlockMixin",
+    "minecraft.RecipeManagerAccessor",
+    "minecraft.RegistryAliasMixin",
+    "minecraft.ShulkerAccessor",
+    "minecraft.ReloadableServerResourcesMixin",
+    "minecraft.ServerPlayerMixin",
+    "dndesires.FanDragonBreathingCategoryMixinForDnD",
+    "dndesires.FanFreezingCategoryMixinForDnD",
+    "dndesires.FanProcessingTypeMixinForDnD",
+    "dndesires.FanSandingCategoryMixinForDnD",
+    "garnished.DyeBlowingFanCategoryMixin",
+    "garnished.DyeBlowingFanProcessingMixin",
+    "garnished.FanProcessingTypeMixinForGarnished",
+    "garnished.FreezingFanCategoryMixin"
+  ],
+  "client": [
+    "create.AirFlowParticleMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

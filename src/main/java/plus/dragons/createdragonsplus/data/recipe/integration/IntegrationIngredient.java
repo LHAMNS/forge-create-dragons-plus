@@ -1,0 +1,76 @@
+/*
+ * Copyright (C) 2025  DragonsPlus
+ * SPDX-License-Identifier: LGPL-3.0-or-later
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
+
+package plus.dragons.createdragonsplus.data.recipe.integration;
+
+import com.google.gson.JsonObject;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.List;
+import java.util.stream.Stream;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.Ingredient;
+
+/**
+ * Ported from NeoForge 1.21.1 to Forge 1.20.1.
+ * In 1.20.1, Ingredient.Value is not a public interface in the same way.
+ * We use a simple custom Ingredient.Value implementation via Ingredient.fromValues().
+ * Since Ingredient.Value and fromValues are accessible in 1.20.1, this ports directly.
+ */
+public class IntegrationIngredient {
+    public static Ingredient of(String mod, String name) {
+        return of(new ResourceLocation(mod, name));
+    }
+
+    public static Ingredient of(ResourceLocation location) {
+        return Ingredient.fromValues(Stream.of(new Value(location)));
+    }
+
+    public static Ingredient of(ResourceLocation... locations) {
+        return Ingredient.fromValues(Arrays.stream(locations).map(Value::new));
+    }
+
+    /**
+     * A custom Ingredient.Value that represents an item by its ResourceLocation.
+     * Returns empty items since the item may not be loaded (integration mod not present).
+     */
+    public static class Value implements Ingredient.Value {
+        private final ResourceLocation location;
+
+        public Value(ResourceLocation location) {
+            this.location = location;
+        }
+
+        public ResourceLocation location() {
+            return location;
+        }
+
+        @Override
+        public Collection<ItemStack> getItems() {
+            return List.of();
+        }
+
+        @Override
+        public JsonObject serialize() {
+            JsonObject json = new JsonObject();
+            json.addProperty("item", location.toString());
+            return json;
+        }
+    }
+}
