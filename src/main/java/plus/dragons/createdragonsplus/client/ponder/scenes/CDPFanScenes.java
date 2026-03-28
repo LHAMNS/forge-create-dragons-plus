@@ -170,7 +170,7 @@ public class CDPFanScenes {
             }
         });
         scene.idle(80);
-        scene.world().modifyEntity(sheep, Entity::discard);
+        scene.world().modifyEntity(armorStand, Entity::discard);
         scene.idle(20);
     }
 

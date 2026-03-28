@@ -80,7 +80,7 @@ public abstract class CDPAdvancement {
         }
 
         if (createBuilder.type == CDPAdvancement.TaskType.SECRET)
-            description += SECRET_SUFFIX;
+            description = (description == null ? "" : description) + SECRET_SUFFIX;
 
         addToAdvancementEntries();
     }

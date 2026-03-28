@@ -158,9 +158,11 @@ public class SandingFanProcessingType implements DynamicParticleFanProcessingTyp
         public BlockState getState() { return state; }
         public int getColor() { return color; }
 
+        private static final int MAX_SOUND_POSITIONS = 64;
+
         public void playSound(Level level, Vec3 pos) {
             if (level.getGameTime() % 7 == 0) {
-                if (playedSoundPos.add(BlockPos.containing(pos))) {
+                if (playedSoundPos.size() < MAX_SOUND_POSITIONS && playedSoundPos.add(BlockPos.containing(pos))) {
                     AllSoundEvents.SANDING_SHORT.playAt(level, pos,
                             0.3F + 0.1F * level.random.nextFloat(),
                             0.9F + 0.2F * level.random.nextFloat(),

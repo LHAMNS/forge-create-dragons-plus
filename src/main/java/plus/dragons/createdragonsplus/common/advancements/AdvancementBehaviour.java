@@ -109,7 +109,8 @@ public class AdvancementBehaviour extends BlockEntityBehaviour {
 
     public @Nullable ServerPlayer getOwner() {
         if (this.owner == null) return null;
-        if (this.getWorld().getPlayerByUUID(this.owner) instanceof ServerPlayer player)
+        var world = this.getWorld();
+        if (world != null && world.getPlayerByUUID(this.owner) instanceof ServerPlayer player)
             return player instanceof FakePlayer ? null : player;
         return null;
     }
