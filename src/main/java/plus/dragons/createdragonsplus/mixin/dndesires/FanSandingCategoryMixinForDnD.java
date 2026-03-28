@@ -32,9 +32,13 @@ import uwu.lopyluna.create_dd.jei.fan.DDProcessingViaFanCategory;
  * <p>
  * Note: DnD 0.2c does not have FanSandingCategory in the jei.fan package.
  * (0.1b had it at uwu.lopyluna.create_dd.content.jei.FanSandingCategory, but 0.2c removed it.)
- * This mixin uses a string target so RestrictiveMixinConfigPlugin will safely skip it
- * when the target class does not exist. It will automatically activate if a future
- * DnD version adds this category class.
+ * This mixin uses a string target so {@link plus.dragons.createdragonsplus.mixin.CDPMixinConfigPlugin}
+ * will safely skip it when the target class does not exist. It will automatically activate
+ * if a future DnD version adds this category class.
+ * <p>
+ * Version note: On Forge 1.20.1, DnDesires uses mod ID {@code create_dd} with package
+ * {@code uwu.lopyluna.create_dd}. The rename to {@code dndesires} / {@code dev.lopyluna.dndesires}
+ * only applies to NeoForge 1.21.1+. The targets and imports here are correct for Forge 1.20.1.
  */
 @Restriction(require = @Condition(Constants.CREATE_DND))
 @Mixin(targets = "uwu.lopyluna.create_dd.jei.fan.FanSandingCategory", remap = false)

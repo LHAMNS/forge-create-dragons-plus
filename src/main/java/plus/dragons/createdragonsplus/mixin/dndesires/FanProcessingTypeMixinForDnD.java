@@ -36,6 +36,10 @@ public abstract class FanProcessingTypeMixinForDnD {
     // DnD 0.2c only has FreezingType in IndustrialTypeFanProcessing.
     // DragonBreathingType and SandingType do not exist in 0.2c but may be added in future versions.
     // We use class name string matching to avoid ClassNotFoundError and for forward compatibility.
+    //
+    // Version note: On Forge 1.20.1, DnDesires uses package "uwu.lopyluna.create_dd".
+    // The rename to "dev.lopyluna.dndesires" only applies to NeoForge 1.21.1+.
+    // The fully-qualified class name below is correct for the Forge 1.20.1 version of DnD.
     @WrapOperation(method = "getAt", at = @At(value = "INVOKE", target = "Lcom/simibubi/create/content/kinetics/fan/processing/FanProcessingType;isValidAt(Lnet/minecraft/world/level/Level;Lnet/minecraft/core/BlockPos;)Z"))
     private static boolean ignoreDisabledType(FanProcessingType instance, Level level, BlockPos blockPos, Operation<Boolean> original) {
         String className = instance.getClass().getName();

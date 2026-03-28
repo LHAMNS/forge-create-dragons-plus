@@ -39,7 +39,7 @@
   "create_dragons_plus.ponder.bulk_freezing.header": "Congélation de masse",
   "create_dragons_plus.ponder.bulk_freezing.text_1": "Un flux d'air passant à travers de la neige poudresse constitue une installation de congélation",
   "create_dragons_plus.ponder.bulk_sanding.header": "Bulk Sanding",
-  "create_dragons_plus.ponder.bulk_sanding.text_1": "Air Flows passing through Bulk Sanding Catalysts (Example: Quicksand) create a Sanding Setup",
+  "create_dragons_plus.ponder.bulk_sanding.text_1": "Un flux d'air passant \u00e0 travers des catalyseurs de pon\u00e7age (exemple : sables mouvants) constitue une installation de pon\u00e7age",
   "create_dragons_plus.ponder.bulk_sanding.text_2": "Like Bulk Blasting and Bulk Smoking, Bulk Sanding is automatically compatible with Sand Paper sanding recipes",
   "fluid_type.create_dragons_plus.black_dye": "Teinture noire",
   "fluid_type.create_dragons_plus.blue_dye": "Teinture bleue",

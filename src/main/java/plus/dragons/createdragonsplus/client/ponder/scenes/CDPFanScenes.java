@@ -108,6 +108,8 @@ public class CDPFanScenes {
         scene.world().removeItemsFromBelt(util.grid().at(2, 1, 1));
         scene.idle(10);
         scene.world().setKineticSpeed(belt.add(util.select().position(0, 0, 4)), 0);
+        scene.world().hideSection(belt, Direction.DOWN);
+        scene.idle(15);
         var pos = util.grid().at(1, 2, 2);
         var sheep = scene.world().createEntity(level -> {
             Sheep s = new Sheep(EntityType.SHEEP, level);
