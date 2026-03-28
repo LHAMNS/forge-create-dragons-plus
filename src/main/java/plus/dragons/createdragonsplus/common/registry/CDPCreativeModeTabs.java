@@ -5,8 +5,10 @@
  */
 package plus.dragons.createdragonsplus.common.registry;
 
-import static plus.dragons.createdragonsplus.common.registry.CDPBlocks.*;
-import static plus.dragons.createdragonsplus.common.registry.CDPItems.*;
+import static plus.dragons.createdragonsplus.common.registry.CDPBlocks.FLUID_HATCH;
+import static plus.dragons.createdragonsplus.common.registry.CDPItems.BLAZE_UPGRADE_SMITHING_TEMPLATE;
+import static plus.dragons.createdragonsplus.common.registry.CDPItems.RARE_BLAZE_PACKAGE;
+import static plus.dragons.createdragonsplus.common.registry.CDPItems.RARE_MARBLE_GATE_PACKAGE;
 
 import com.simibubi.create.AllCreativeModeTabs;
 import net.minecraft.core.registries.Registries;

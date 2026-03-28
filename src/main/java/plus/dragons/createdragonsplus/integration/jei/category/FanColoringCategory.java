@@ -240,7 +240,7 @@ public class FanColoringCategory extends ProcessingViaFanCategory<ColoringRecipe
         @Override
         protected ItemStack getCatalyst() {
             if (catalystStacks == null) {
-                catalystStacks = Arrays.stream(DyeColors.ALL)
+                catalystStacks = DyeColors.ALL.stream()
                         .map(CDPFluids.DYES_BY_COLOR::get)
                         .map(entry -> new ItemStack(entry.getBucket().get()))
                         .toArray(ItemStack[]::new);

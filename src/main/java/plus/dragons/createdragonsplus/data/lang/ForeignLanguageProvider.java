@@ -53,7 +53,7 @@ public class ForeignLanguageProvider implements DataProvider {
     private final PackOutput.PathProvider langPathProvider;
     private final ResourceManager resourceManager;
 
-    private static @Nullable Method getManagerMethod;
+    private static volatile @Nullable Method getManagerMethod;
 
     public ForeignLanguageProvider(String modid, String templateLocale, PackOutput output, ExistingFileHelper existingFileHelper) {
         this.modid = modid;
@@ -68,11 +68,18 @@ public class ForeignLanguageProvider implements DataProvider {
 
     private static ResourceManager invokeGetManager(ExistingFileHelper helper, PackType type) {
         try {
-            if (getManagerMethod == null) {
-                getManagerMethod = ExistingFileHelper.class.getDeclaredMethod("getManager", PackType.class);
-                getManagerMethod.setAccessible(true);
+            Method method = getManagerMethod;
+            if (method == null) {
+                synchronized (ForeignLanguageProvider.class) {
+                    method = getManagerMethod;
+                    if (method == null) {
+                        method = ExistingFileHelper.class.getDeclaredMethod("getManager", PackType.class);
+                        method.setAccessible(true);
+                        getManagerMethod = method;
+                    }
+                }
             }
-            return (ResourceManager) getManagerMethod.invoke(helper, type);
+            return (ResourceManager) method.invoke(helper, type);
         } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
             throw new RuntimeException("Failed to reflectively access ExistingFileHelper#getManager", e);
         }

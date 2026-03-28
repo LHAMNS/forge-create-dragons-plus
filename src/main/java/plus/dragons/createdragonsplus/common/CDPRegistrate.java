@@ -111,7 +111,7 @@ public class CDPRegistrate extends AbstractRegistrate<CDPRegistrate> {
      * Cached reflective access to ExistingFileHelper's getManager method,
      * replacing the NeoForge mixin ExistingFileHelperAccessor.
      */
-    private static @Nullable Method getManagerMethod;
+    private static volatile @Nullable Method getManagerMethod;
 
     public CDPRegistrate(String modid) {
         super(modid);
@@ -198,11 +198,16 @@ public class CDPRegistrate extends AbstractRegistrate<CDPRegistrate> {
     }
 
     public CDPRegistrate registerPonderLocalization(Supplier<PonderPlugin> plugin) {
-        if (FMLEnvironment.dist == Dist.CLIENT) {
+        if (FMLEnvironment.dist != Dist.CLIENT) {
+            return this;
+        }
+        try {
             PonderIndex.addPlugin(plugin.get());
             this.addDataGenerator(ProviderType.LANG, prov -> PonderIndex
                     .getLangAccess()
                     .provideLang(getModid(), prov::add));
+        } catch (NoClassDefFoundError e) {
+            logger.warn("Ponder localization registration skipped: client classes not available", e);
         }
         return this;
     }
@@ -256,11 +261,18 @@ public class CDPRegistrate extends AbstractRegistrate<CDPRegistrate> {
      */
     private static ResourceManager invokeGetManager(ExistingFileHelper helper, PackType type) {
         try {
-            if (getManagerMethod == null) {
-                getManagerMethod = ExistingFileHelper.class.getDeclaredMethod("getManager", PackType.class);
-                getManagerMethod.setAccessible(true);
+            Method method = getManagerMethod;
+            if (method == null) {
+                synchronized (CDPRegistrate.class) {
+                    method = getManagerMethod;
+                    if (method == null) {
+                        method = ExistingFileHelper.class.getDeclaredMethod("getManager", PackType.class);
+                        method.setAccessible(true);
+                        getManagerMethod = method;
+                    }
+                }
             }
-            return (ResourceManager) getManagerMethod.invoke(helper, type);
+            return (ResourceManager) method.invoke(helper, type);
         } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
             throw new RuntimeException("Failed to reflectively access ExistingFileHelper#getManager", e);
         }

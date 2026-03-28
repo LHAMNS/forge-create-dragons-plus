@@ -28,6 +28,7 @@ public class DyeLiquidBlock extends LiquidBlock {
 
     @Override
     public void entityInside(BlockState state, Level level, BlockPos pos, Entity entity) {
+        if (level.isClientSide) return;
         var type = CDPFanProcessingTypes.COLORING.get(this.color);
         if (entity instanceof ItemEntity itemEntity) {
             FanProcessing.applyProcessing(itemEntity, type);

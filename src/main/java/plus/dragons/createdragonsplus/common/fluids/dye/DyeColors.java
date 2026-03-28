@@ -19,15 +19,15 @@
 
 package plus.dragons.createdragonsplus.common.fluids.dye;
 
-import java.util.Arrays;
 import java.util.Comparator;
 import java.util.EnumMap;
+import java.util.List;
 import net.minecraft.Util;
 import net.minecraft.world.item.DyeColor;
 
 public class DyeColors {
-    public static final DyeColor[] ALL = Util.make(new DyeColor[16], colors -> System.arraycopy(DyeColor.values(), 0, colors, 0, 16));
-    public static final DyeColor[] CREATIVE_MODE_TAB = new DyeColor[] {
+    public static final List<DyeColor> ALL = List.of(DyeColor.values());
+    public static final List<DyeColor> CREATIVE_MODE_TAB = List.of(
             DyeColor.WHITE,
             DyeColor.LIGHT_GRAY,
             DyeColor.GRAY,
@@ -44,7 +44,7 @@ public class DyeColors {
             DyeColor.PURPLE,
             DyeColor.MAGENTA,
             DyeColor.PINK
-    };
+    );
     public static final EnumMap<DyeColor, String> LOCALIZATION = Util.make(new EnumMap<>(DyeColor.class), map -> {
         map.put(DyeColor.WHITE, "White");
         map.put(DyeColor.LIGHT_GRAY, "Light Gray");
@@ -65,7 +65,6 @@ public class DyeColors {
     });
 
     public static Comparator<DyeColor> creativeModeTabOrder() {
-        var list = Arrays.asList(CREATIVE_MODE_TAB);
-        return Comparator.comparingInt(list::indexOf);
+        return Comparator.comparingInt(CREATIVE_MODE_TAB::indexOf);
     }
 }

@@ -18,20 +18,20 @@
 
 package plus.dragons.createdragonsplus.client.renderer.blockentity;
 
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Lists;
 import dev.engine_room.flywheel.lib.model.baked.PartialModel;
-import net.minecraft.Util;
+import java.util.List;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.client.ChunkRenderTypeSet;
 import net.minecraftforge.client.model.data.ModelData;
-import org.apache.commons.lang3.ArrayUtils;
 
 public interface PartialModelBlockEntityRenderer {
     RandomSource CACHED_RANDOM = RandomSource.create(42L);
-    RenderType[] REVERSED_CHUNK_BUFFER_LAYERS = Util.make(
-            RenderType.chunkBufferLayers().toArray(RenderType[]::new),
-            ArrayUtils::reverse);
+    List<RenderType> REVERSED_CHUNK_BUFFER_LAYERS = ImmutableList.copyOf(
+            Lists.reverse(RenderType.chunkBufferLayers()));
 
     default RenderType getRenderType(BlockState blockState, PartialModel model) {
         ChunkRenderTypeSet types = model.get().getRenderTypes(blockState, CACHED_RANDOM, ModelData.EMPTY);

@@ -32,30 +32,34 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
+import org.slf4j.Logger;
 import plus.dragons.createdragonsplus.common.registry.CDPBlocks;
 
 public class SandingScenes {
-    public static BlockState SANDING_CATALYST;
+    private static final Logger LOGGER = LogUtils.getLogger();
+    private static volatile BlockState sandingCatalyst;
 
     public static void bulkSanding(SceneBuilder builder, SceneBuildingUtil util) {
         CreateSceneBuilder scene = new CreateSceneBuilder(builder);
-        if (SANDING_CATALYST == null) {
+        if (sandingCatalyst == null) {
             var optional = BuiltInRegistries.BLOCK.getOptional(new ResourceLocation("quicksand", "quicksand"));
             if (optional.isEmpty()) {
                 var optional2 = BuiltInRegistries.BLOCK.getTag(CDPBlocks.FAN_SANDING_CATALYSTS);
                 if (optional2.isEmpty() || optional2.get().size() == 0)
                     optional2 = BuiltInRegistries.BLOCK.getTag(TagKey.create(Registries.BLOCK, new ResourceLocation("create_dd", "fan_processing_catalysts/sanding")));
                 if (optional2.isEmpty() || optional2.get().size() == 0) {
-                    LogUtils.getLogger().error("Sanding catalysts not found! Please report this to Author with log!");
-                    SANDING_CATALYST = Blocks.SAND.defaultBlockState();
+                    LOGGER.error("Sanding catalysts not found! Please report this to Author with log!");
+                    sandingCatalyst = Blocks.SAND.defaultBlockState();
                 } else {
-                    SANDING_CATALYST = optional2.get().stream().findFirst().get().value().defaultBlockState();
+                    sandingCatalyst = optional2.get().stream().findFirst()
+                            .map(holder -> holder.value().defaultBlockState())
+                            .orElse(Blocks.SAND.defaultBlockState());
                 }
             } else {
-                SANDING_CATALYST = optional.get().defaultBlockState();
+                sandingCatalyst = optional.get().defaultBlockState();
             }
         }
-        scene.world().setBlock(util.grid().at(3, 2, 3), SANDING_CATALYST, false);
+        scene.world().setBlock(util.grid().at(3, 2, 3), sandingCatalyst, false);
 
         scene.title("bulk_sanding", "Bulk Sanding");
         scene.configureBasePlate(0, 0, 5);
