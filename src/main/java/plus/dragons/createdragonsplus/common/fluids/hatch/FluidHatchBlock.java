@@ -110,7 +110,7 @@ public class FluidHatchBlock extends HorizontalDirectionalBlock implements IBE<F
             return InteractionResult.SUCCESS;
 
         if (player instanceof FakePlayer)
-            return InteractionResult.SUCCESS;
+            return InteractionResult.PASS;
 
         BlockEntity blockEntity = level.getBlockEntity(pos.relative(state.getValue(FACING)));
         if (blockEntity == null)

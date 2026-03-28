@@ -21,6 +21,7 @@ package plus.dragons.createdragonsplus.common.registry;
 import java.util.Collections;
 import java.util.EnumMap;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
@@ -61,16 +62,22 @@ public class CDPDataMaps {
 
     /**
      * Result cache: maps a resolved Fluid to its DyeColor after a tag scan hit.
-     * Avoids repeated iteration over tag maps on the hot path (called per ColoringFanProcessingType).
+     * Also caches negative results (null mapped as NEGATIVE_SENTINEL_COLOR) to avoid
+     * repeated tag iteration on non-catalyst fluids in the hot path.
      * Cleared when new catalysts are registered, since tag membership may change.
      */
     private static final Map<Fluid, DyeColor> FLUID_TAG_RESULT_CACHE = new ConcurrentHashMap<>();
 
     /**
      * Result cache: maps a resolved Block to its DyeColor after a tag scan hit.
+     * Also caches negative results to avoid repeated tag iteration.
      * Cleared when new catalysts are registered.
      */
     private static final Map<Block, DyeColor> BLOCK_TAG_RESULT_CACHE = new ConcurrentHashMap<>();
+
+    /** Negative cache: fluids/blocks confirmed to NOT be catalysts. Avoids repeated tag iteration. */
+    private static final Set<Fluid> FLUID_NEGATIVE_CACHE = ConcurrentHashMap.newKeySet();
+    private static final Set<Block> BLOCK_NEGATIVE_CACHE = ConcurrentHashMap.newKeySet();
 
     public static void register() {
         // Register fluid tag -> DyeColor mappings
@@ -107,7 +114,9 @@ public class CDPDataMaps {
         // Check individual fluid mappings first (fast path for Garnished etc.)
         DyeColor color = FLUID_DIRECT_FAN_COLORING_CATALYSTS.get(fluid);
         if (color != null) return color;
-        // Check result cache (avoids repeated tag iteration on hot path)
+        // Check negative cache (confirmed non-catalysts, skip tag iteration)
+        if (FLUID_NEGATIVE_CACHE.contains(fluid)) return null;
+        // Check positive result cache (avoids repeated tag iteration on hot path)
         color = FLUID_TAG_RESULT_CACHE.get(fluid);
         if (color != null) return color;
         // Check tag-based mappings and cache the result
@@ -117,6 +126,8 @@ public class CDPDataMaps {
                 return entry.getValue();
             }
         }
+        // Cache negative result to avoid re-iterating tags next time
+        FLUID_NEGATIVE_CACHE.add(fluid);
         return null;
     }
 
@@ -130,7 +141,9 @@ public class CDPDataMaps {
         // Check individual block mappings first (fast path)
         DyeColor color = BLOCK_FAN_COLORING_CATALYSTS.get(block);
         if (color != null) return color;
-        // Check result cache (avoids repeated tag iteration on hot path)
+        // Check negative cache (confirmed non-catalysts, skip tag iteration)
+        if (BLOCK_NEGATIVE_CACHE.contains(block)) return null;
+        // Check positive result cache (avoids repeated tag iteration on hot path)
         color = BLOCK_TAG_RESULT_CACHE.get(block);
         if (color != null) return color;
         // Check tag-based mappings and cache the result
@@ -140,6 +153,8 @@ public class CDPDataMaps {
                 return entry.getValue();
             }
         }
+        // Cache negative result to avoid re-iterating tags next time
+        BLOCK_NEGATIVE_CACHE.add(block);
         return null;
     }
 
@@ -190,5 +205,7 @@ public class CDPDataMaps {
     public static void clearTagCaches() {
         FLUID_TAG_RESULT_CACHE.clear();
         BLOCK_TAG_RESULT_CACHE.clear();
+        FLUID_NEGATIVE_CACHE.clear();
+        BLOCK_NEGATIVE_CACHE.clear();
     }
 }
