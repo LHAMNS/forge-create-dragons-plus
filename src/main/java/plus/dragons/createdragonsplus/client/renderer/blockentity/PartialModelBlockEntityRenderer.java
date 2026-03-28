@@ -3,16 +3,16 @@
  * SPDX-License-Identifier: LGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
+ * it under the terms of the GNU Lesser General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * GNU Lesser General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
+ * You should have received a copy of the GNU Lesser General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
@@ -28,12 +28,13 @@ import net.minecraftforge.client.model.data.ModelData;
 import org.apache.commons.lang3.ArrayUtils;
 
 public interface PartialModelBlockEntityRenderer {
+    RandomSource CACHED_RANDOM = RandomSource.create(42L);
     RenderType[] REVERSED_CHUNK_BUFFER_LAYERS = Util.make(
             RenderType.chunkBufferLayers().toArray(RenderType[]::new),
             ArrayUtils::reverse);
 
     default RenderType getRenderType(BlockState blockState, PartialModel model) {
-        ChunkRenderTypeSet types = model.get().getRenderTypes(blockState, RandomSource.create(42L), ModelData.EMPTY);
+        ChunkRenderTypeSet types = model.get().getRenderTypes(blockState, CACHED_RANDOM, ModelData.EMPTY);
         for (RenderType type : REVERSED_CHUNK_BUFFER_LAYERS)
             if (types.contains(type))
                 return type;
