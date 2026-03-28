@@ -65,9 +65,17 @@ import java.util.Optional;
  * Create Garnished compat lookups.
  */
 public class ColoringFanProcessingType implements FanProcessingType {
-    // Static cache for coloring recipes grouped by DyeColor
-    private static volatile Map<DyeColor, List<Recipe<?>>> coloringRecipesByColor = Collections.emptyMap();
-    private static volatile RecipeManager lastRecipeManager;
+    /**
+     * Immutable holder for the recipe cache, enabling atomic replacement via a
+     * single volatile write. This eliminates the race condition where two volatile
+     * fields (lastRecipeManager + coloringRecipesByColor) could be observed in an
+     * inconsistent state by concurrent threads.
+     */
+    private record RecipeCache(RecipeManager manager, Map<DyeColor, List<Recipe<?>>> recipesByColor) {
+        static final RecipeCache EMPTY = new RecipeCache(null, Collections.emptyMap());
+    }
+
+    private static volatile RecipeCache recipeCache = RecipeCache.EMPTY;
 
     /**
      * Get coloring recipes pre-filtered for a specific DyeColor.
@@ -76,7 +84,8 @@ public class ColoringFanProcessingType implements FanProcessingType {
     @SuppressWarnings("unchecked")
     public static List<Recipe<?>> getRecipesForColor(DyeColor color, Level level) {
         RecipeManager currentManager = level.getRecipeManager();
-        if (currentManager != lastRecipeManager) {
+        RecipeCache cache = recipeCache;
+        if (currentManager != cache.manager()) {
             Map<DyeColor, List<Recipe<?>>> newMap = new EnumMap<>(DyeColor.class);
             for (DyeColor c : DyeColor.values()) {
                 newMap.put(c, new ArrayList<>());
@@ -89,10 +98,11 @@ public class ColoringFanProcessingType implements FanProcessingType {
             for (DyeColor c : DyeColor.values()) {
                 newMap.put(c, Collections.unmodifiableList(newMap.get(c)));
             }
-            coloringRecipesByColor = Collections.unmodifiableMap(newMap);
-            lastRecipeManager = currentManager;
+            // Single volatile write replaces both manager reference and map atomically
+            recipeCache = new RecipeCache(currentManager, Collections.unmodifiableMap(newMap));
+            cache = recipeCache;
         }
-        return coloringRecipesByColor.getOrDefault(color, Collections.emptyList());
+        return cache.recipesByColor().getOrDefault(color, Collections.emptyList());
     }
 
     private final DyeColor color;

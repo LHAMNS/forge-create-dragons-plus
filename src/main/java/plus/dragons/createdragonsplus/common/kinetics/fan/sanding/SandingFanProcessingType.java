@@ -9,7 +9,7 @@ import com.simibubi.create.AllRecipeTypes;
 import com.simibubi.create.AllSoundEvents;
 import com.simibubi.create.content.kinetics.fan.processing.FanProcessingType;
 import com.simibubi.create.foundation.recipe.RecipeApplier;
-import it.unimi.dsi.fastutil.objects.ObjectArraySet;
+import java.util.HashSet;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.BlockParticleOption;
 import net.minecraft.core.particles.ParticleTypes;
@@ -148,7 +148,7 @@ public class SandingFanProcessingType implements DynamicParticleFanProcessingTyp
     public static class ParticleData {
         private final BlockState state;
         private final int color;
-        private final Set<BlockPos> playedSoundPos = new ObjectArraySet<>();
+        private final Set<BlockPos> playedSoundPos = new HashSet<>();
 
         public ParticleData(BlockState state, int color) {
             this.state = state;
