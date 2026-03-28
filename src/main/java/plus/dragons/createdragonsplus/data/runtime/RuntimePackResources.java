@@ -26,8 +26,8 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Path;
-import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
@@ -70,7 +70,7 @@ public final class RuntimePackResources implements PackResources, RepositorySour
     private final String packId;
     private final Component title;
     private final PackOutput output;
-    private final Map<Path, IoSupplier<InputStream>> resources = new HashMap<>();
+    private final Map<Path, IoSupplier<InputStream>> resources = new ConcurrentHashMap<>();
 
     public RuntimePackResources(String name, ModContainer modContainer, PackType type, Pack.Position position, Component title, Component description) {
         var modInfo = modContainer.getModInfo();

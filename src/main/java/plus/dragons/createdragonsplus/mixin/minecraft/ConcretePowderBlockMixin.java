@@ -41,6 +41,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+import plus.dragons.createdragonsplus.common.registry.CDPDataMaps;
 import plus.dragons.createdragonsplus.common.registry.CDPFluids;
 
 @Mixin(ConcretePowderBlock.class)
@@ -87,9 +88,13 @@ public abstract class ConcretePowderBlockMixin extends FallingBlock {
             mutableBlockPos.setWithOffset(pos, direction);
             var fluid = level.getBlockState(mutableBlockPos).getFluidState();
             if (fluid.is(CDPFluids.COMMON_TAGS.dyes)) {
-                var coloredConcrete = BuiltInRegistries.BLOCK.getOptional(
-                        new ResourceLocation(BuiltInRegistries.FLUID.getKey(fluid.getType()).getPath().replace("_dye", "_concrete").replace("flowing_", "")));
-                return coloredConcrete.map(Block::defaultBlockState).orElse(concrete);
+                var dyeColor = CDPDataMaps.getFluidColoringCatalyst(fluid);
+                if (dyeColor != null) {
+                    var coloredConcrete = BuiltInRegistries.BLOCK.getOptional(
+                            new ResourceLocation(dyeColor.getName() + "_concrete"));
+                    return coloredConcrete.map(Block::defaultBlockState).orElse(concrete);
+                }
+                return concrete;
             }
         }
         return null;

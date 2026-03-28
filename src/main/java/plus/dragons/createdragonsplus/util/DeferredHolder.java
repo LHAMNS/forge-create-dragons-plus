@@ -145,7 +145,9 @@ public class DeferredHolder<R, T extends R> implements Supplier<T> {
             if (registry != null) {
                 cached = (T) registry.get(id);
             }
-            resolved = true;
+            if (cached != null) {
+                resolved = true;
+            }
             return cached;
         }
     }

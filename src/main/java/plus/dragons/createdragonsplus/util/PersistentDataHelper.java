@@ -81,11 +81,23 @@ public class PersistentDataHelper {
     }
 
     private static CompoundTag getParent(CompoundTag nbt, String... path) {
+        return getParent(nbt, true, path);
+    }
+
+    private static CompoundTag getParentReadOnly(CompoundTag nbt, String... path) {
+        return getParent(nbt, false, path);
+    }
+
+    private static CompoundTag getParent(CompoundTag nbt, boolean create, String... path) {
         int lastIndex = path.length - 1;
         for (int index = 0; index < lastIndex; index++) {
             String key = path[index];
-            if (!nbt.contains(key, Tag.TAG_COMPOUND))
-                nbt.put(key, new CompoundTag());
+            if (!nbt.contains(key, Tag.TAG_COMPOUND)) {
+                if (create)
+                    nbt.put(key, new CompoundTag());
+                else
+                    return new CompoundTag();
+            }
             nbt = nbt.getCompound(key);
         }
         return nbt;
@@ -95,7 +107,7 @@ public class PersistentDataHelper {
         Preconditions.checkArgument(path.length > 0, EXCEPTION_EMPTY_PATH);
         if (path.length == 1)
             return nbt.getByte(path[0]);
-        return getParent(nbt, path).getByte(path[path.length - 1]);
+        return getParentReadOnly(nbt, path).getByte(path[path.length - 1]);
     }
 
     public static void putByte(CompoundTag nbt, byte value, String... path) {
@@ -116,7 +128,7 @@ public class PersistentDataHelper {
         Preconditions.checkArgument(path.length > 0, EXCEPTION_EMPTY_PATH);
         if (path.length == 1)
             return nbt.getShort(path[0]);
-        return getParent(nbt, path).getShort(path[path.length - 1]);
+        return getParentReadOnly(nbt, path).getShort(path[path.length - 1]);
     }
 
     public static void putShort(CompoundTag nbt, short value, String... path) {
@@ -136,7 +148,7 @@ public class PersistentDataHelper {
     public static int getInt(CompoundTag nbt, String... path) {
         Preconditions.checkArgument(path.length > 0, EXCEPTION_EMPTY_PATH);
         if (path.length == 1) return nbt.getInt(path[0]);
-        return getParent(nbt, path).getInt(path[path.length - 1]);
+        return getParentReadOnly(nbt, path).getInt(path[path.length - 1]);
     }
 
     public static void putInt(CompoundTag nbt, int value, String... path) {
@@ -157,7 +169,7 @@ public class PersistentDataHelper {
         Preconditions.checkArgument(path.length > 0, EXCEPTION_EMPTY_PATH);
         if (path.length == 1)
             return nbt.getLong(path[0]);
-        return getParent(nbt, path).getLong(path[path.length - 1]);
+        return getParentReadOnly(nbt, path).getLong(path[path.length - 1]);
     }
 
     public static void putLong(CompoundTag nbt, long value, String... path) {
@@ -178,7 +190,7 @@ public class PersistentDataHelper {
         Preconditions.checkArgument(path.length > 0, EXCEPTION_EMPTY_PATH);
         if (path.length == 1)
             return nbt.getFloat(path[0]);
-        return getParent(nbt, path).getFloat(path[path.length - 1]);
+        return getParentReadOnly(nbt, path).getFloat(path[path.length - 1]);
     }
 
     public static void putFloat(CompoundTag nbt, float value, String... path) {
@@ -199,7 +211,7 @@ public class PersistentDataHelper {
         Preconditions.checkArgument(path.length > 0, EXCEPTION_EMPTY_PATH);
         if (path.length == 1)
             return nbt.getDouble(path[0]);
-        return getParent(nbt, path).getDouble(path[path.length - 1]);
+        return getParentReadOnly(nbt, path).getDouble(path[path.length - 1]);
     }
 
     public static void putDouble(CompoundTag nbt, double value, String... path) {
@@ -220,14 +232,14 @@ public class PersistentDataHelper {
         Preconditions.checkArgument(path.length > 0, EXCEPTION_EMPTY_PATH);
         if (path.length == 1)
             return nbt.getString(path[0]);
-        return getParent(nbt, path).getString(path[path.length - 1]);
+        return getParentReadOnly(nbt, path).getString(path[path.length - 1]);
     }
 
     public static Optional<String> getOptionalString(CompoundTag nbt, String... path) {
         Preconditions.checkArgument(path.length > 0, EXCEPTION_EMPTY_PATH);
         String key = path[path.length - 1];
         if (path.length > 1)
-            nbt = getParent(nbt, path);
+            nbt = getParentReadOnly(nbt, path);
         if (nbt.contains(key, Tag.TAG_STRING))
             //noinspection DataFlowIssue
             return Optional.of(nbt.get(key).getAsString());

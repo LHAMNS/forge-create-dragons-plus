@@ -39,8 +39,11 @@ public class BlockEntityBehaviourMixin {
     private static <T extends BlockEntityBehaviour> void get$getSmartBlockEntityFromWrapper(BlockGetter blockGetter, BlockPos pos, BehaviourType<T> type, CallbackInfoReturnable<T> cir, @Local BlockEntity blockEntity) {
         if (blockEntity != null && !(blockEntity instanceof SmartBlockEntity) && blockGetter instanceof Level level) {
             var provider = blockEntity.getCapability(CDPCapabilities.BEHAVIOUR_PROVIDER).orElse(null);
-            if (provider != null)
-                cir.setReturnValue(provider.getBehaviour(type));
+            if (provider != null) {
+                T behaviour = provider.getBehaviour(type);
+                if (behaviour != null)
+                    cir.setReturnValue(behaviour);
+            }
         }
     }
 }

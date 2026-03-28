@@ -53,6 +53,6 @@ public class VanillaRecipeBuilders {
     }
 
     public static CookingRecipeBuilder campfire() {
-        return new CookingRecipeBuilder("smoking", "campfire_cooking", 600);
+        return new CookingRecipeBuilder("campfire_cooking", "campfire_cooking", 600);
     }
 }

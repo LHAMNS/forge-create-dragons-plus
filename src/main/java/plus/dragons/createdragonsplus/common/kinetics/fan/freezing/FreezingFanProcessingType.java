@@ -114,7 +114,7 @@ public class FreezingFanProcessingType implements FanProcessingType {
     public void affectEntity(Entity entity, Level level) {
         if (level.isClientSide) return;
         if (entity.canFreeze()) {
-            entity.setTicksFrozen(Math.min(entity.getTicksRequiredToFreeze(), entity.getTicksFrozen()) + 3);
+            entity.setTicksFrozen(Math.min(entity.getTicksRequiredToFreeze(), entity.getTicksFrozen() + 3));
         }
         entity.clearFire();
     }

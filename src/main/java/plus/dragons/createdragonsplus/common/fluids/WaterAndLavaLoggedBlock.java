@@ -75,8 +75,9 @@ public interface WaterAndLavaLoggedBlock extends BucketPickup, LiquidBlockContai
         var containedFluid = state.getValue(FLUID);
         if (containedFluid == ContainedFluid.EMPTY)
             return ItemStack.EMPTY;
-        level.setBlock(pos, state.setValue(FLUID, ContainedFluid.EMPTY), 3);
-        if (!state.canSurvive(level, pos)) {
+        BlockState newState = state.setValue(FLUID, ContainedFluid.EMPTY);
+        level.setBlock(pos, newState, 3);
+        if (!newState.canSurvive(level, pos)) {
             level.destroyBlock(pos, true);
         }
         return containedFluid == ContainedFluid.WATER ? new ItemStack(Items.WATER_BUCKET) : new ItemStack(Items.LAVA_BUCKET);

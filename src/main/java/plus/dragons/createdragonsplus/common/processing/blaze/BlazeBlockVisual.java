@@ -92,21 +92,29 @@ public class BlazeBlockVisual<T extends BlazeBlockEntity> extends AbstractBlockE
 
             boolean needsRods = heatLevel.isAtLeast(BlazeBurnerBlock.HeatLevel.FADING);
             boolean hasRods = this.heatLevel.isAtLeast(HeatLevel.FADING);
+            boolean rodsModelChanged = needsRods && hasRods
+                    && (heatLevel == BlazeBurnerBlock.HeatLevel.SEETHING) != (this.heatLevel == BlazeBurnerBlock.HeatLevel.SEETHING);
 
-            if (needsRods && !hasRods) {
+            if (needsRods && (!hasRods || rodsModelChanged)) {
                 PartialModel rodsModel = heatLevel == BlazeBurnerBlock.HeatLevel.SEETHING ? AllPartialModels.BLAZE_BURNER_SUPER_RODS
                         : AllPartialModels.BLAZE_BURNER_RODS;
                 PartialModel rodsModel2 = heatLevel == BlazeBurnerBlock.HeatLevel.SEETHING ? AllPartialModels.BLAZE_BURNER_SUPER_RODS_2
                         : AllPartialModels.BLAZE_BURNER_RODS_2;
 
-                smallRods = instancerProvider().instancer(InstanceTypes.TRANSFORMED, Models.partial(rodsModel))
-                        .createInstance();
-                largeRods = instancerProvider().instancer(InstanceTypes.TRANSFORMED, Models.partial(rodsModel2))
-                        .createInstance();
+                if (rodsModelChanged) {
+                    if (smallRods != null)
+                        instancerProvider().instancer(InstanceTypes.TRANSFORMED, Models.partial(rodsModel)).stealInstance(smallRods);
+                    if (largeRods != null)
+                        instancerProvider().instancer(InstanceTypes.TRANSFORMED, Models.partial(rodsModel2)).stealInstance(largeRods);
+                } else {
+                    smallRods = instancerProvider().instancer(InstanceTypes.TRANSFORMED, Models.partial(rodsModel))
+                            .createInstance();
+                    largeRods = instancerProvider().instancer(InstanceTypes.TRANSFORMED, Models.partial(rodsModel2))
+                            .createInstance();
 
-                smallRods.light(LightTexture.FULL_BRIGHT);
-                largeRods.light(LightTexture.FULL_BRIGHT);
-
+                    smallRods.light(LightTexture.FULL_BRIGHT);
+                    largeRods.light(LightTexture.FULL_BRIGHT);
+                }
             } else if (!needsRods && hasRods) {
                 if (smallRods != null)
                     smallRods.delete();

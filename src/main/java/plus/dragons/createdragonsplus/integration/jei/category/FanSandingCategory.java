@@ -140,6 +140,8 @@ public class FanSandingCategory extends ProcessingViaFanCategory<SandingRecipe> 
         protected ItemStack getCatalyst() {
             var optional = BuiltInRegistries.BLOCK.getTag(CDPBlocks.FAN_SANDING_CATALYSTS);
             if (optional.isEmpty())
+                optional = BuiltInRegistries.BLOCK.getTag(TagKey.create(Registries.BLOCK, new ResourceLocation("create_dd", "fan_processing_catalysts/sanding")));
+            if (optional.isEmpty())
                 return ItemStack.EMPTY;
             if (catalystBlocks != optional.get()) {
                 catalystBlocks = optional.get();
