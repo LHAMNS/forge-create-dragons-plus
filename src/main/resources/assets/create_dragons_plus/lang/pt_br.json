@@ -78,6 +78,8 @@
   "item.create_dragons_plus.smithing_template.blaze_upgrade.applies_to": "Queimador de Blaze",
   "item.create_dragons_plus.smithing_template.blaze_upgrade.base_slot_description": "Adicionar Queimador de Blaze",
   "item.create_dragons_plus.smithing_template.blaze_upgrade.ingredients": "Blocos de trabalho para Blaze",
+  "item.create_dragons_plus.rare_blaze_pacakge": "Rare Blaze Package",
+  "item.create_dragons_plus.rare_marble_gate_pacakge": "Rare Marble Gate Package",
   "item.create_dragons_plus.white_dye_bucket": "Balde de Tinta Branca",
   "item.create_dragons_plus.yellow_dye_bucket": "Balde de Tinta Amarela",
   "itemGroup.create_dragons_plus.base": "Create: Dragons Plus",

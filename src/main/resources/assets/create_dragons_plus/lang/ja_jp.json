@@ -78,6 +78,8 @@
   "item.create_dragons_plus.smithing_template.blaze_upgrade.applies_to": "ブレイズバーナー",
   "item.create_dragons_plus.smithing_template.blaze_upgrade.base_slot_description": "ブレイズバーナーを追加",
   "item.create_dragons_plus.smithing_template.blaze_upgrade.ingredients": "ブレイズの作業ブロック",
+  "item.create_dragons_plus.rare_blaze_pacakge": "Rare Blaze Package",
+  "item.create_dragons_plus.rare_marble_gate_pacakge": "Rare Marble Gate Package",
   "item.create_dragons_plus.white_dye_bucket": "白色の液体染料入りバケツ",
   "item.create_dragons_plus.yellow_dye_bucket": "黄色の液体染料入りバケツ",
   "itemGroup.create_dragons_plus.base": "Create: Dragons Plus",

@@ -25,6 +25,7 @@ import net.minecraft.world.item.crafting.Recipe;
 import net.minecraftforge.event.AddReloadListenerEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
+import plus.dragons.createdragonsplus.common.CDPCommon;
 import plus.dragons.createdragonsplus.util.RecipeHolder;
 
 import java.util.IdentityHashMap;
@@ -44,7 +45,7 @@ import java.util.function.Function;
 public interface RecipeConverter<K extends Recipe<?>, V extends Recipe<?>> extends Function<RecipeHolder<K>, RecipeHolder<V>> {
     Map<RecipeConverter<?, ?>, Runnable> CACHE_INVALIDATORS = new IdentityHashMap<>();
 
-    @Mod.EventBusSubscriber
+    @Mod.EventBusSubscriber(modid = CDPCommon.ID)
     class Events {
         @SubscribeEvent
         static void onAddReloadListener(final AddReloadListenerEvent event) {

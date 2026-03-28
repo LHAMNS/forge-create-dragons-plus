@@ -45,7 +45,7 @@ import plus.dragons.createdragonsplus.data.recipe.CreateRecipeBuilders;
  * - No DataMapHooks (NeoForge-only) -- oxidized/waxed block recipes use Forge equivalents
  * - @EventBusSubscriber -> manual registration or @Mod.EventBusSubscriber
  */
-@Mod.EventBusSubscriber
+@Mod.EventBusSubscriber(modid = CDPCommon.ID)
 public class CDPRuntimeRecipeProvider extends RecipeProvider {
     public CDPRuntimeRecipeProvider(PackOutput output) {
         super(output);

@@ -54,10 +54,6 @@ repositories {
         url = 'https://maven.ithundxr.dev/mirror'
     }
     maven {
-        name = 'Flywheel'
-        url = 'https://maven.createmod.net'
-    }
-    maven {
         name = 'Jared'
         url = 'https://maven.blamejared.com/'
     }
@@ -66,17 +62,8 @@ repositories {
         url = 'https://api.modrinth.com/maven'
     }
     maven {
-        name = 'Fuzss'
-        url = 'https://raw.githubusercontent.com/Fuzss/modresources/main/maven/'
-    }
-    maven {
         name = 'FallenBreath'
         url = 'https://maven.fallenbreath.me/releases'
-    }
-    maven {
-        name = 'CurseMaven'
-        url = 'https://cursemaven.com'
-        content { includeGroup "curse.maven" }
     }
     mavenCentral()
 }

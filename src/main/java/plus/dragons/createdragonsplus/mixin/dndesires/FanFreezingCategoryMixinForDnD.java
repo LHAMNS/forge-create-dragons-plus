@@ -29,7 +29,7 @@ import uwu.lopyluna.create_dd.jei.fan.DDProcessingViaFanCategory;
 import uwu.lopyluna.create_dd.jei.fan.FanFreezingCategory;
 
 @Restriction(require = @Condition(Constants.CREATE_DND))
-@Mixin(FanFreezingCategory.class)
+@Mixin(value = FanFreezingCategory.class, remap = false)
 public abstract class FanFreezingCategoryMixinForDnD<T extends ProcessingRecipe<?>> extends DDProcessingViaFanCategory.MultiOutput<T> {
     private FanFreezingCategoryMixinForDnD(Info<T> info) {
         super(info);

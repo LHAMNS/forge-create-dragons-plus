@@ -53,7 +53,7 @@ public class ConfigurableFluidTank extends SmartFluidTank {
         return this;
     }
 
-    public ConfigurableFluidTank allowExtration(Predicate<FluidStack> contentPredicate) {
+    public ConfigurableFluidTank allowExtraction(Predicate<FluidStack> contentPredicate) {
         this.extraction = contentPredicate;
         return this;
     }

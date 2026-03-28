@@ -78,6 +78,8 @@
   "item.create_dragons_plus.smithing_template.blaze_upgrade.applies_to": "Горелке всполоха",
   "item.create_dragons_plus.smithing_template.blaze_upgrade.base_slot_description": "Поместите горелку всполоха",
   "item.create_dragons_plus.smithing_template.blaze_upgrade.ingredients": "Рабочие блоки для всполоха",
+  "item.create_dragons_plus.rare_blaze_pacakge": "Rare Blaze Package",
+  "item.create_dragons_plus.rare_marble_gate_pacakge": "Rare Marble Gate Package",
   "item.create_dragons_plus.white_dye_bucket": "Ведро белого красителя",
   "item.create_dragons_plus.yellow_dye_bucket": "Ведро жёлтого красителя",
   "itemGroup.create_dragons_plus.base": "Create: Dragons Plus",

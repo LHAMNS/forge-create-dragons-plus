@@ -31,10 +31,11 @@ import net.minecraft.world.level.storage.loot.providers.number.ConstantValue;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.event.LootTableLoadEvent;
+import plus.dragons.createdragonsplus.common.CDPCommon;
 import plus.dragons.createdragonsplus.config.CDPConfig;
 
 public class CDPLoots {
-    @Mod.EventBusSubscriber
+    @Mod.EventBusSubscriber(modid = CDPCommon.ID)
     public static class TableInjections {
         public static final Object2IntMap<ResourceLocation> BLAZE_UPGRADE_SMITHING_TEMPLATE = Util.make(
                 new Object2IntOpenHashMap<>(),

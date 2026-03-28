@@ -213,7 +213,7 @@ public class CDPFluids {
         }
     }
 
-    @Mod.EventBusSubscriber
+    @Mod.EventBusSubscriber(modid = CDPCommon.ID)
     public static class Reactions {
         private static final Map<FluidType, BlockState> LAVA_INTERACTIONS = new HashMap<>();
 

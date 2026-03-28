@@ -78,6 +78,8 @@
   "item.create_dragons_plus.smithing_template.blaze_upgrade.applies_to": "Őrlángégő",
   "item.create_dragons_plus.smithing_template.blaze_upgrade.base_slot_description": "Őrlángégő hozzáadása",
   "item.create_dragons_plus.smithing_template.blaze_upgrade.ingredients": "Őrlánggal működő blokkok",
+  "item.create_dragons_plus.rare_blaze_pacakge": "Rare Blaze Package",
+  "item.create_dragons_plus.rare_marble_gate_pacakge": "Rare Marble Gate Package",
   "item.create_dragons_plus.white_dye_bucket": "Fehér festékes vödör",
   "item.create_dragons_plus.yellow_dye_bucket": "Sárga festékes vödör",
   "itemGroup.create_dragons_plus.base": "Create: dragons plus",
