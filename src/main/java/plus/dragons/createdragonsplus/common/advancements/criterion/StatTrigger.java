@@ -23,11 +23,12 @@ import com.google.common.collect.Tables;
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSerializationContext;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.IdentityHashMap;
+import java.util.List;
 import java.util.Set;
 import net.minecraft.advancements.CriterionTrigger;
-import net.minecraft.advancements.CriterionTriggerInstance;
 import net.minecraft.advancements.critereon.AbstractCriterionTriggerInstance;
 import net.minecraft.advancements.critereon.DeserializationContext;
 import net.minecraft.advancements.critereon.MinMaxBounds;
@@ -37,12 +38,7 @@ import net.minecraft.server.PlayerAdvancements;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.stats.Stat;
 import net.minecraft.stats.StatType;
-import net.minecraft.stats.Stats;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.event.entity.player.PlayerEvent;
-import net.minecraftforge.eventbus.api.EventPriority;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
 import plus.dragons.createdragonsplus.common.CDPCommon;
 
 public class StatTrigger implements CriterionTrigger<StatTrigger.Instance> {
@@ -106,9 +102,18 @@ public class StatTrigger implements CriterionTrigger<StatTrigger.Instance> {
         var listeners = this.listeners.get(advancements, stat);
         if (listeners == null || listeners.isEmpty())
             return;
+        // Collect matching listeners before running to avoid ConcurrentModificationException,
+        // since listener.run() may modify the listener set via addPlayerListener/removePlayerListener
+        List<Listener<Instance>> toRun = null;
         for (var listener : listeners) {
             var trigger = listener.getTriggerInstance();
             if (trigger.bounds.matches(value)) {
+                if (toRun == null) toRun = new ArrayList<>();
+                toRun.add(listener);
+            }
+        }
+        if (toRun != null) {
+            for (var listener : toRun) {
                 listener.run(advancements);
             }
         }

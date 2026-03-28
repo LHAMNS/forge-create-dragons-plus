@@ -18,8 +18,8 @@
 
 package plus.dragons.createdragonsplus.common.registry;
 
+import java.util.Collections;
 import java.util.EnumMap;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -41,17 +41,17 @@ import plus.dragons.createdragonsplus.integration.ModIntegration;
  * matching the original NeoForge DataMapType behavior.
  */
 public class CDPDataMaps {
-    /** Map from fluid tag to DyeColor for fan coloring catalysts. */
-    private static final Map<TagKey<Fluid>, DyeColor> FLUID_FAN_COLORING_CATALYSTS = new HashMap<>();
+    /** Map from fluid tag to DyeColor for fan coloring catalysts. Uses ConcurrentHashMap for thread safety during registration. */
+    private static final Map<TagKey<Fluid>, DyeColor> FLUID_FAN_COLORING_CATALYSTS = new ConcurrentHashMap<>();
 
-    /** Map from block tag to DyeColor for fan coloring catalysts. */
-    private static final Map<TagKey<Block>, DyeColor> BLOCK_TAG_FAN_COLORING_CATALYSTS = new HashMap<>();
+    /** Map from block tag to DyeColor for fan coloring catalysts. Uses ConcurrentHashMap for thread safety during registration. */
+    private static final Map<TagKey<Block>, DyeColor> BLOCK_TAG_FAN_COLORING_CATALYSTS = new ConcurrentHashMap<>();
 
-    /** Map from individual fluid to DyeColor for fan coloring catalysts. */
-    private static final Map<Fluid, DyeColor> FLUID_DIRECT_FAN_COLORING_CATALYSTS = new HashMap<>();
+    /** Map from individual fluid to DyeColor for fan coloring catalysts. Uses ConcurrentHashMap for thread safety during registration. */
+    private static final Map<Fluid, DyeColor> FLUID_DIRECT_FAN_COLORING_CATALYSTS = new ConcurrentHashMap<>();
 
-    /** Map from individual block to DyeColor for fan coloring catalysts. */
-    private static final Map<Block, DyeColor> BLOCK_FAN_COLORING_CATALYSTS = new HashMap<>();
+    /** Map from individual block to DyeColor for fan coloring catalysts. Uses ConcurrentHashMap for thread safety during registration. */
+    private static final Map<Block, DyeColor> BLOCK_FAN_COLORING_CATALYSTS = new ConcurrentHashMap<>();
 
     /** Map from DyeColor to its corresponding fluid tag. */
     private static final EnumMap<DyeColor, TagKey<Fluid>> FLUID_TAGS_BY_COLOR = new EnumMap<>(DyeColor.class);
@@ -152,15 +152,15 @@ public class CDPDataMaps {
     }
 
     public static Map<TagKey<Fluid>, DyeColor> getFluidFanColoringCatalysts() {
-        return FLUID_FAN_COLORING_CATALYSTS;
+        return Collections.unmodifiableMap(FLUID_FAN_COLORING_CATALYSTS);
     }
 
     public static Map<TagKey<Block>, DyeColor> getBlockFanColoringCatalysts() {
-        return BLOCK_TAG_FAN_COLORING_CATALYSTS;
+        return Collections.unmodifiableMap(BLOCK_TAG_FAN_COLORING_CATALYSTS);
     }
 
     public static Map<Block, DyeColor> getBlockDirectFanColoringCatalysts() {
-        return BLOCK_FAN_COLORING_CATALYSTS;
+        return Collections.unmodifiableMap(BLOCK_FAN_COLORING_CATALYSTS);
     }
 
     public static void registerFluidCatalyst(TagKey<Fluid> tag, DyeColor color) {
@@ -181,5 +181,14 @@ public class CDPDataMaps {
 
     public static void registerBlockCatalyst(Block block, DyeColor color) {
         BLOCK_FAN_COLORING_CATALYSTS.put(block, color);
+    }
+
+    /**
+     * Clears tag-based result caches. Should be called on data pack reload
+     * since tag membership may change.
+     */
+    public static void clearTagCaches() {
+        FLUID_TAG_RESULT_CACHE.clear();
+        BLOCK_TAG_RESULT_CACHE.clear();
     }
 }

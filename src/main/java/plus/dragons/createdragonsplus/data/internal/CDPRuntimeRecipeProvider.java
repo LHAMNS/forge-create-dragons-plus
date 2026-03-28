@@ -33,6 +33,7 @@ import net.minecraftforge.fml.common.Mod;
 import plus.dragons.createdragonsplus.common.CDPCommon;
 import plus.dragons.createdragonsplus.common.recipe.UpdateRecipesEvent;
 import plus.dragons.createdragonsplus.common.registry.CDPBlocks;
+import plus.dragons.createdragonsplus.common.registry.CDPDataMaps;
 import plus.dragons.createdragonsplus.config.CDPConfig;
 import plus.dragons.createdragonsplus.data.recipe.CreateRecipeBuilders;
 
@@ -88,6 +89,8 @@ public class CDPRuntimeRecipeProvider extends RecipeProvider {
      */
     @SubscribeEvent
     public static void buildRecipesForUpdate(final UpdateRecipesEvent event) {
+        // Clear tag-based caches since tag membership may have changed on reload
+        CDPDataMaps.clearTagCaches();
         if (CDPConfig.COMMON.generateSandPaperPolishingRecipeForOxidizedBlocks.get()) {
             buildOxidizedBlockRecipes(event);
         }

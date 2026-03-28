@@ -107,8 +107,8 @@ public final class DragonBreathFluidType extends SolidRenderFluidType {
         AreaEffectCloud aoe = new AreaEffectCloud(level, pos.getX(), pos.getY(), pos.getZ());
         aoe.setOwner(player);
         aoe.setParticle(ParticleTypes.DRAGON_BREATH);
-        aoe.setRadius(stack.getAmount() / 500F);
-        aoe.setDuration(stack.getAmount() / 5);
+        aoe.setRadius(Math.min(stack.getAmount() / 500F, 6.0F));
+        aoe.setDuration(Math.min(stack.getAmount() / 5, 600));
         aoe.setRadiusPerTick(-0.01F);
         aoe.addEffect(new MobEffectInstance(MobEffects.HARM, 1, 1));
         aoe.getPersistentData().putBoolean("DragonBreath", true);

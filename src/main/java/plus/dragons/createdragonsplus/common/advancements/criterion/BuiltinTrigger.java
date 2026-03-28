@@ -47,8 +47,12 @@ public class BuiltinTrigger implements CriterionTrigger<BuiltinTrigger.Instance>
     public void trigger(ServerPlayer player) {
         var advancements = player.getAdvancements();
         var set = this.listeners.get(advancements);
-        if (set != null) {
-            set.forEach(listener -> listener.run(advancements));
+        if (set != null && !set.isEmpty()) {
+            // Copy to avoid ConcurrentModificationException: listener.run() may modify the set
+            var toRun = List.copyOf(set);
+            for (var listener : toRun) {
+                listener.run(advancements);
+            }
         }
     }
 
