@@ -171,9 +171,12 @@ public class FluidHatchBlock extends HorizontalDirectionalBlock implements IBE<F
         ItemStack copy = stack.copy();
         emptying = GenericItemEmptying.emptyItem(level, copy, false);
 
-        // Prevent special cap behavior interrupting insert fluid.
+        // Re-simulate fill to guard against capability state changes between the
+        // first simulate (above) and now. If the tank can no longer accept the
+        // fluid, abort without consuming the item (don't update player hand).
         int realFill = capability.fill(fluidStack.copy(), FluidAction.SIMULATE);
-        if (realFill == 0) return fluidStack;
+        if (realFill != fluidStack.getAmount())
+            return FluidStack.EMPTY;
         capability.fill(fluidStack.copy(), FluidAction.EXECUTE);
         blockEntity.setChanged();
 
@@ -208,20 +211,24 @@ public class FluidHatchBlock extends HorizontalDirectionalBlock implements IBE<F
             if (level.isClientSide)
                 return fluidStack;
 
-            if (player.isCreative() || blockEntity instanceof CreativeFluidTankBlockEntity)
-                stack = stack.copy();
-            ItemStack result = GenericItemFilling.fillItem(level, requiredAmountForItem, stack, fluidStack.copy());
-
             FluidStack fluidCopy = fluidStack.copy();
             fluidCopy.setAmount(requiredAmountForItem);
 
-            // Prevent special cap behavior interrupting draw fluid. Such as Mekanism.
-            FluidStack realDraw = capability.drain(fluidCopy, FluidAction.SIMULATE);
-            if (realDraw.isEmpty())
+            // Re-simulate drain to guard against capability state changes between
+            // the initial check and now. If the tank can no longer provide the
+            // fluid, abort without consuming the item.
+            FluidStack realDraw = capability.drain(fluidCopy.copy(), FluidAction.SIMULATE);
+            if (realDraw.isEmpty() || realDraw.getAmount() < requiredAmountForItem)
                 return FluidStack.EMPTY;
+
+            // Use a copy for fillItem so the original stack is untouched until
+            // we confirm the drain succeeds.
+            ItemStack stackForFill = stack.copy();
+            ItemStack result = GenericItemFilling.fillItem(level, requiredAmountForItem, stackForFill, fluidStack.copy());
+
             capability.drain(fluidCopy, FluidAction.EXECUTE);
 
-            if (!player.isCreative()) {
+            if (!player.isCreative() && !(blockEntity instanceof CreativeFluidTankBlockEntity)) {
                 stack.shrink(1);
                 if (stack.isEmpty())
                     player.setItemInHand(hand, result);
