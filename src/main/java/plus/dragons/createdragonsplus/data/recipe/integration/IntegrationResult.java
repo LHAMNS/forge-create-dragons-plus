@@ -54,7 +54,7 @@ public class IntegrationResult {
         if (delegate.hasTag()) {
             // Serialize NBT tag for the result if present
             // In 1.20.1 this would be the "nbt" field
-            // We only need this for encode, not decode
+            json.addProperty("nbt", delegate.getTag().toString());
         }
         return json;
     }

@@ -40,7 +40,9 @@ public class OpenEndedPipeMixin {
     private void provideFluidToSpace$checkVaporize(FluidStack fluid, boolean simulate, CallbackInfoReturnable<Boolean> cir) {
         var type = fluid.getFluid().getFluidType();
         if (world.dimensionType().ultraWarm() && type.isVaporizedOnPlacement(world, outputPos, fluid)) {
-            type.onVaporize(null, world, outputPos, fluid);
+            if (!simulate) {
+                type.onVaporize(null, world, outputPos, fluid);
+            }
             cir.setReturnValue(true);
         }
     }

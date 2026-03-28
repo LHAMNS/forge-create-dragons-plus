@@ -22,6 +22,15 @@ import java.util.List;
 import net.minecraft.resources.ResourceLocation;
 
 public class CDPGuiTextures {
-    public static final List<ResourceLocation> BLAZE_UPGRADE_BASE_SLOT_ICONS = List.of();
-    public static final List<ResourceLocation> BLAZE_UPGRADE_ADDITIONS_SLOT_ICONS = List.of();
+    // Vanilla empty slot icon texture locations used for smithing table slot hints
+    private static final ResourceLocation EMPTY_SLOT_INGOT = new ResourceLocation("item/empty_slot_ingot");
+
+    // Base slot: shows a generic Blaze Burner hint (using ingot as fallback since no custom texture exists)
+    public static final List<ResourceLocation> BLAZE_UPGRADE_BASE_SLOT_ICONS = List.of(
+            EMPTY_SLOT_INGOT
+    );
+    // Additions slot: shows ingot icon for working blocks/items
+    public static final List<ResourceLocation> BLAZE_UPGRADE_ADDITIONS_SLOT_ICONS = List.of(
+            EMPTY_SLOT_INGOT
+    );
 }

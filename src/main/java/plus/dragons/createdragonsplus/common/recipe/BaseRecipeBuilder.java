@@ -78,9 +78,11 @@ public abstract class BaseRecipeBuilder<R extends Recipe<?>, B extends BaseRecip
         if (this.directory != null) {
             recipeId = new ResourceLocation(recipeId.getNamespace(), this.directory + "/" + recipeId.getPath());
         }
-        // Wrap with conditions if needed
-        if (!this.conditions.isEmpty()) {
-            output.accept(new ConditionalFinishedRecipe(finished, recipeId, this.conditions));
+        // Build advancement if criteria were provided
+        Advancement.Builder advBuilder = this.buildAdvancement();
+        // Wrap with conditions and/or advancement if needed
+        if (!this.conditions.isEmpty() || advBuilder != null) {
+            output.accept(new ConditionalFinishedRecipe(finished, recipeId, this.conditions, advBuilder));
         } else {
             output.accept(finished);
         }
@@ -168,11 +170,13 @@ public abstract class BaseRecipeBuilder<R extends Recipe<?>, B extends BaseRecip
         private final FinishedRecipe wrapped;
         private final ResourceLocation id;
         private final List<ICondition> conditions;
+        private final @Nullable Advancement.Builder advancementBuilder;
 
-        ConditionalFinishedRecipe(FinishedRecipe wrapped, ResourceLocation id, List<ICondition> conditions) {
+        ConditionalFinishedRecipe(FinishedRecipe wrapped, ResourceLocation id, List<ICondition> conditions, @Nullable Advancement.Builder advancementBuilder) {
             this.wrapped = wrapped;
             this.id = id;
             this.conditions = conditions;
+            this.advancementBuilder = advancementBuilder;
         }
 
         @Override
@@ -192,11 +196,22 @@ public abstract class BaseRecipeBuilder<R extends Recipe<?>, B extends BaseRecip
 
         @Override
         public @Nullable com.google.gson.JsonObject serializeAdvancement() {
+            if (advancementBuilder != null) {
+                return advancementBuilder
+                        .parent(new ResourceLocation("recipes/root"))
+                        .addCriterion("has_the_recipe", net.minecraft.advancements.critereon.RecipeUnlockedTrigger.unlocked(id))
+                        .rewards(net.minecraft.advancements.AdvancementRewards.Builder.recipe(id))
+                        .requirements(net.minecraft.advancements.RequirementsStrategy.OR)
+                        .serializeToJson();
+            }
             return wrapped.serializeAdvancement();
         }
 
         @Override
         public @Nullable ResourceLocation getAdvancementId() {
+            if (advancementBuilder != null) {
+                return new ResourceLocation(id.getNamespace(), "recipes/" + id.getPath());
+            }
             return wrapped.getAdvancementId();
         }
 

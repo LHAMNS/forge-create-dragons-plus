@@ -272,6 +272,10 @@ public class ColoringFanProcessingType implements FanProcessingType {
             ItemStack result = coloringRecipe.get().assemble(reusableWrapper, level.registryAccess());
             return Optional.of(result);
         }
+        Optional<List<ItemStack>> garnishedResult = processByCreateGarnished(stack, level);
+        if (garnishedResult.isPresent() && !garnishedResult.get().isEmpty()) {
+            return Optional.of(garnishedResult.get().get(0));
+        }
         return processByCrafting(stack, level);
     }
 

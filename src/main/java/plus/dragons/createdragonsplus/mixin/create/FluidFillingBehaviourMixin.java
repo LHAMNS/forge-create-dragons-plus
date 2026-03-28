@@ -46,6 +46,10 @@ public abstract class FluidFillingBehaviourMixin extends FluidManipulationBehavi
 
     @Inject(method = "tryDeposit", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/Level;m_6263_(Lnet/minecraft/world/entity/player/Player;DDDLnet/minecraft/sounds/SoundEvent;Lnet/minecraft/sounds/SoundSource;FF)V"), cancellable = true)
     private void tryDeposit$onVaporize(Fluid fluid, BlockPos root, boolean simulate, CallbackInfoReturnable<Boolean> cir) {
+        if (simulate) {
+            cir.setReturnValue(true);
+            return;
+        }
         var world = getWorld();
         if (world == null) return;
         var fluidStack = new FluidStack(fluid, 1000);
