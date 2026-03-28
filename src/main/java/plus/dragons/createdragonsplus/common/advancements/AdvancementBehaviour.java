@@ -95,7 +95,7 @@ public class AdvancementBehaviour extends BlockEntityBehaviour {
     }
 
     public void setOwner(@Nullable UUID owner) {
-        if (owner != this.owner) {
+        if (!java.util.Objects.equals(owner, this.owner)) {
             this.statsCounter.clear();
         }
         this.owner = owner;

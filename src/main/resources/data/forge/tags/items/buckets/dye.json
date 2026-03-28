@@ -1,0 +1,20 @@
+{
+  "values": [
+    "#forge:buckets/dye/white",
+    "#forge:buckets/dye/orange",
+    "#forge:buckets/dye/magenta",
+    "#forge:buckets/dye/light_blue",
+    "#forge:buckets/dye/yellow",
+    "#forge:buckets/dye/lime",
+    "#forge:buckets/dye/pink",
+    "#forge:buckets/dye/gray",
+    "#forge:buckets/dye/light_gray",
+    "#forge:buckets/dye/cyan",
+    "#forge:buckets/dye/purple",
+    "#forge:buckets/dye/blue",
+    "#forge:buckets/dye/brown",
+    "#forge:buckets/dye/green",
+    "#forge:buckets/dye/red",
+    "#forge:buckets/dye/black"
+  ]
+}

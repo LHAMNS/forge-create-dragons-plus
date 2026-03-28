@@ -32,13 +32,13 @@ import plus.dragons.createdragonsplus.common.fluids.dye.DyeColors;
 
 public class CDPItems {
     // Tags
-    public static final TagKey<Item> DYE_BUCKETS = ItemTags.create(new ResourceLocation("c", "buckets/dye"));
+    public static final TagKey<Item> DYE_BUCKETS = ItemTags.create(new ResourceLocation("forge", "buckets/dye"));
     public static final EnumMap<DyeColor, TagKey<Item>> DYE_BUCKETS_BY_COLOR = Util.make(new EnumMap<>(DyeColor.class), map -> {
         for (DyeColor color : DyeColors.ALL) {
-            map.put(color, ItemTags.create(new ResourceLocation("c", "buckets/dye/" + color.getName())));
+            map.put(color, ItemTags.create(new ResourceLocation("forge", "buckets/dye/" + color.getName())));
         }
     });
-    public static final TagKey<Item> DRAGON_BREATH_BUCKETS = ItemTags.create(new ResourceLocation("c", "buckets/dragon_breath"));
+    public static final TagKey<Item> DRAGON_BREATH_BUCKETS = ItemTags.create(new ResourceLocation("forge", "buckets/dragon_breath"));
     public static final TagKey<Item> NOT_APPLICABLE_COLORING = ItemTags.create(new ResourceLocation(CDPCommon.ID, "not_applicable_for_coloring"));
 
     /** @deprecated Use static fields directly. Kept for API compatibility. */

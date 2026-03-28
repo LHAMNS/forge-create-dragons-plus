@@ -38,14 +38,18 @@ public abstract class FluidFillingBehaviourMixin extends FluidManipulationBehavi
 
     @ModifyVariable(method = "tryDeposit", at = @At(value = "STORE", ordinal = 0), name = "evaporate")
     private boolean tryDeposit$isVaporizedOnPlacement(boolean vaporize, Fluid fluid, BlockPos root, boolean simulate) {
+        var world = getWorld();
+        if (world == null) return vaporize;
         var fluidStack = new FluidStack(fluid, 1000);
-        return fluid.getFluidType().isVaporizedOnPlacement(getWorld(), getPos(), fluidStack);
+        return fluid.getFluidType().isVaporizedOnPlacement(world, getPos(), fluidStack);
     }
 
     @Inject(method = "tryDeposit", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/Level;m_6263_(Lnet/minecraft/world/entity/player/Player;DDDLnet/minecraft/sounds/SoundEvent;Lnet/minecraft/sounds/SoundSource;FF)V"), cancellable = true)
     private void tryDeposit$onVaporize(Fluid fluid, BlockPos root, boolean simulate, CallbackInfoReturnable<Boolean> cir) {
+        var world = getWorld();
+        if (world == null) return;
         var fluidStack = new FluidStack(fluid, 1000);
-        fluid.getFluidType().onVaporize(null, getWorld(), root, fluidStack);
+        fluid.getFluidType().onVaporize(null, world, root, fluidStack);
         cir.setReturnValue(true);
     }
 }

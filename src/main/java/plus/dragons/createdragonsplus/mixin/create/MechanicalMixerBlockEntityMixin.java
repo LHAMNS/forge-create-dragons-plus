@@ -45,7 +45,7 @@ public abstract class MechanicalMixerBlockEntityMixin extends BasinOperatingBloc
 
     @Inject(method = "getMatchingRecipes", at = @At(value = "FIELD", ordinal = 0, target = "Lnet/minecraftforge/common/capabilities/ForgeCapabilities;ITEM_HANDLER:Lnet/minecraftforge/common/capabilities/Capability;"))
     private void getMatchingRecipes$checkDragonBreathFluid(CallbackInfoReturnable<List<Recipe<?>>> cir, @Local BasinBlockEntity basin, @Local List<Recipe<?>> matchingRecipes) {
-        assert level != null;
+        if (level == null) return;
         if (CDPConfig.COMMON.generateAutomaticBrewingRecipeForDragonBreathFluid.get()) {
             var tanksOpt = basin.getCapability(ForgeCapabilities.FLUID_HANDLER);
             tanksOpt.ifPresent(tanks -> {

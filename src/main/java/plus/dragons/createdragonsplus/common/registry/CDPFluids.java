@@ -172,7 +172,7 @@ public class CDPFluids {
                 .tag(CDPItems.DYE_BUCKETS_BY_COLOR.getOrDefault(color, CDPItems.DYE_BUCKETS))
                 .model((ctx, prov) -> prov.withExistingParent(ctx.getName(), prov.modLoc("dye_bucket")))
                 .color(() -> SimpleItemColors.singleLayer(tintColor))
-                .tag(ItemTags.create(new ResourceLocation("c", "dyed/" + color.getName())))
+                .tag(ItemTags.create(new ResourceLocation("forge", "dyed/" + color.getName())))
                 .build()
                 .tag(tag)
                 .setData(ProviderType.RECIPE, (ctx, prov) -> {
@@ -201,13 +201,13 @@ public class CDPFluids {
     }
 
     public static class CommonTags {
-        public final TagKey<Fluid> dyes = TagKey.create(Registries.FLUID, new ResourceLocation("c", "dyes"));
+        public final TagKey<Fluid> dyes = TagKey.create(Registries.FLUID, new ResourceLocation("forge", "dyes"));
         public final EnumMap<DyeColor, TagKey<Fluid>> dyesByColor = Util.make(new EnumMap<>(DyeColor.class), map -> {
             for (var color : DyeColors.ALL) {
-                map.put(color, TagKey.create(Registries.FLUID, new ResourceLocation("c", "dyes/" + color.getName())));
+                map.put(color, TagKey.create(Registries.FLUID, new ResourceLocation("forge", "dyes/" + color.getName())));
             }
         });
-        public final TagKey<Fluid> dragonBreath = TagKey.create(Registries.FLUID, new ResourceLocation("c", "dragon_breath"));
+        public final TagKey<Fluid> dragonBreath = TagKey.create(Registries.FLUID, new ResourceLocation("forge", "dragon_breath"));
 
         protected CommonTags() {
         }

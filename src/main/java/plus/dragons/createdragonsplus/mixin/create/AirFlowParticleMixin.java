@@ -40,7 +40,10 @@ public class AirFlowParticleMixin {
     private IAirCurrentSource source;
 
     @SuppressWarnings({ "rawtypes", "unchecked" })
-    @WrapOperation(method = "tick", at = @At(value = "INVOKE", target = "Lcom/simibubi/create/content/kinetics/fan/processing/FanProcessingType;morphAirFlow(Lcom/simibubi/create/content/kinetics/fan/processing/FanProcessingType$AirFlowParticleAccess;Lnet/minecraft/util/RandomSource;)V"))
+    // Use SRG name m_5989_ because tick() is inherited from vanilla Particle class,
+    // and this mixin uses remap=false (targeting Create class). At runtime the method
+    // is obfuscated to its SRG name. Using "tick" would cause MixinApplyError on client.
+    @WrapOperation(method = "m_5989_", at = @At(value = "INVOKE", target = "Lcom/simibubi/create/content/kinetics/fan/processing/FanProcessingType;morphAirFlow(Lcom/simibubi/create/content/kinetics/fan/processing/FanProcessingType$AirFlowParticleAccess;Lnet/minecraft/util/RandomSource;)V"))
     private void tick$morphAirFlowWithParticleData(FanProcessingType type, AirFlowParticleAccess particleAccess, RandomSource random, Operation<Void> original, @Local(name = "distance") double distance) {
         if (type instanceof DynamicParticleFanProcessingType dynamicType) {
             AirCurrentAccess airCurrent = (AirCurrentAccess) this.source.getAirCurrent();
