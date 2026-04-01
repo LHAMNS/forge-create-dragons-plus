@@ -54,15 +54,14 @@ public class CDPJeiPlugin implements IModPlugin {
 
     @Override
     public void registerCategories(IRecipeCategoryRegistration registration) {
+        // Always register all categories; JEI hides categories with no recipes.
+        // Avoids reading server config on the client, which is not authoritative
+        // in multiplayer and can cause category visibility to diverge.
         this.categories.clear();
-        if (CDPConfig.server().enableBulkColoring.get())
-            this.categories.add(FanColoringCategory.create());
-        if (CDPConfig.server().enableBulkFreezing.get())
-            this.categories.add(FanFreezingCategory.create());
-        if (CDPConfig.server().enableBulkSanding.get())
-            this.categories.add(FanSandingCategory.create());
-        if (CDPConfig.server().enableBulkEnding.get())
-            this.categories.add(FanEndingCategory.create());
+        this.categories.add(FanColoringCategory.create());
+        this.categories.add(FanFreezingCategory.create());
+        this.categories.add(FanSandingCategory.create());
+        this.categories.add(FanEndingCategory.create());
         registration.addRecipeCategories(categories.toArray(IRecipeCategory[]::new));
     }
 

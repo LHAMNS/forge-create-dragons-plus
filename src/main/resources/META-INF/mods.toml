@@ -5,7 +5,7 @@ issueTrackerURL="https://github.com/DragonsPlusMinecraft/CreateDragonsPlus/issue
 
 [[mods]]
 modId="create_dragons_plus"
-version="1.0.0"
+version="${mod_version}"
 displayName="Forge-Create: Dragons Plus"
 authors="DragonsPlusMinecraft (Ported to Forge 1.20.1)"
 description='''Bulk coloring, freezing, sanding, ending via fan processing. Dragon's breath fluid, dye fluids, fluid hatch.'''
@@ -28,6 +28,6 @@ description='''Bulk coloring, freezing, sanding, ending via fan processing. Drag
 [[dependencies.create_dragons_plus]]
     modId="create"
     mandatory=true
-    versionRange="[0.5.1,)"
+    versionRange="[6.0.8,)"
     ordering="AFTER"
     side="BOTH"

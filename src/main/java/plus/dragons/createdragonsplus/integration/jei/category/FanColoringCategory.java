@@ -177,14 +177,14 @@ public class FanColoringCategory extends ProcessingViaFanCategory<ColoringRecipe
             if (filtered.length == 0) return Optional.empty();
             var recipe = new ProcessingRecipeBuilder<>(ColoringRecipe::new, id)
                     .require(Ingredient.of(filtered))
-                    .output(result.getItem())
+                    .output(result.copy())
                     .build();
             recipe.setColor(color);
             return Optional.of(recipe);
         } else {
             var recipe = new ProcessingRecipeBuilder<>(ColoringRecipe::new, id)
                     .require(in)
-                    .output(result.getItem())
+                    .output(result.copy())
                     .build();
             recipe.setColor(color);
             return Optional.of(recipe);
@@ -217,7 +217,7 @@ public class FanColoringCategory extends ProcessingViaFanCategory<ColoringRecipe
             singleResult.setCount(1);
             var recipe = new ProcessingRecipeBuilder<>(ColoringRecipe::new, id)
                     .require(Ingredient.of(filtered))
-                    .output(singleResult.getItem())
+                    .output(singleResult)
                     .build();
             recipe.setColor(color);
             return Optional.of(recipe);
@@ -226,7 +226,7 @@ public class FanColoringCategory extends ProcessingViaFanCategory<ColoringRecipe
             singleResult.setCount(1);
             var recipe = new ProcessingRecipeBuilder<>(ColoringRecipe::new, id)
                     .require(dyeable)
-                    .output(singleResult.getItem())
+                    .output(singleResult)
                     .build();
             recipe.setColor(color);
             return Optional.of(recipe);

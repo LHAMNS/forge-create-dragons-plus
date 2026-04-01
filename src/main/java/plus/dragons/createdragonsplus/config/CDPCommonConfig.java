@@ -20,12 +20,15 @@ public class CDPCommonConfig {
 
     public CDPCommonConfig(ForgeConfigSpec.Builder builder) {
         builder.push("features");
-        dyeFluids = builder.comment("Enable dye fluids").define("dyeFluids", true);
-        dragonBreathFluid = builder.comment("Enable dragon breath fluid").define("dragonBreathFluid", true);
+        dyeFluids = builder.comment("Enable recipes and creative tab visibility for dye fluids (blocks/items remain registered)")
+                .define("dyeFluids", true);
+        dragonBreathFluid = builder.comment("Enable recipes and creative tab visibility for dragon breath fluid (blocks/items remain registered)")
+                .define("dragonBreathFluid", true);
         dyeFluidsLavaInteractionGenerateColoredConcrete = builder.comment("Dye fluids + lava = colored concrete")
                 .define("dyeFluidsLavaInteractionGenerateColoredConcrete", true);
-        fluidHatch = builder.comment("Enable fluid hatch block").define("fluidHatch", true);
-        blazeUpgradeSmithingTemplate = builder.comment("Enable blaze upgrade smithing template")
+        fluidHatch = builder.comment("Enable recipes and creative tab visibility for fluid hatch block (block remains registered)")
+                .define("fluidHatch", true);
+        blazeUpgradeSmithingTemplate = builder.comment("Enable recipes and creative tab visibility for blaze upgrade smithing template (item remains registered)")
                 .define("blazeUpgradeSmithingTemplate", false);
         builder.pop();
 

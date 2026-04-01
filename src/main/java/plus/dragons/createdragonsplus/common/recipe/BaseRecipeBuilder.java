@@ -80,8 +80,8 @@ public abstract class BaseRecipeBuilder<R extends Recipe<?>, B extends BaseRecip
         }
         // Build advancement if criteria were provided
         Advancement.Builder advBuilder = this.buildAdvancement();
-        // Wrap with conditions and/or advancement if needed
-        if (!this.conditions.isEmpty() || advBuilder != null) {
+        // Wrap with conditions and/or advancement if needed, or when directory prefix changes the id
+        if (!this.conditions.isEmpty() || advBuilder != null || !recipeId.equals(finished.getId())) {
             output.accept(new ConditionalFinishedRecipe(finished, recipeId, this.conditions, advBuilder));
         } else {
             output.accept(finished);

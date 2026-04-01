@@ -55,7 +55,6 @@ import net.minecraftforge.fluids.ForgeFlowingFluid;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.registries.ForgeRegistries;
-import plus.dragons.createdragonsplus.client.color.SimpleItemColors;
 import plus.dragons.createdragonsplus.common.CDPCommon;
 import plus.dragons.createdragonsplus.common.fluids.StandardDispenserBehaviour;
 import plus.dragons.createdragonsplus.common.fluids.dragonBreath.DragonBreathFluidType;
@@ -174,7 +173,7 @@ public class CDPFluids {
                 .bucket()
                 .tag(CDPItems.DYE_BUCKETS_BY_COLOR.getOrDefault(color, CDPItems.DYE_BUCKETS))
                 .model((ctx, prov) -> prov.withExistingParent(ctx.getName(), prov.modLoc("dye_bucket")))
-                .color(() -> SimpleItemColors.singleLayer(tintColor))
+                .color(() -> () -> (stack, tintIndex) -> tintIndex > 0 ? -1 : tintColor)
                 .tag(ItemTags.create(new ResourceLocation("forge", "dyed/" + color.getName())))
                 .build()
                 .tag(tag)

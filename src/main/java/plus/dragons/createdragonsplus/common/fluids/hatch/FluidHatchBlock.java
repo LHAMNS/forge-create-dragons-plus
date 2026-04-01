@@ -116,7 +116,10 @@ public class FluidHatchBlock extends HorizontalDirectionalBlock implements IBE<F
         if (blockEntity == null)
             return InteractionResult.FAIL;
 
-        IFluidHandler tankCapability = blockEntity.getCapability(ForgeCapabilities.FLUID_HANDLER, null).orElse(null);
+        // Query the adjacent block's fluid capability on the face the hatch is mounted to,
+        // so sided fluid handlers (e.g. Create tanks) accept the interaction.
+        Direction querySide = state.getValue(FACING).getOpposite();
+        IFluidHandler tankCapability = blockEntity.getCapability(ForgeCapabilities.FLUID_HANDLER, querySide).orElse(null);
         if (tankCapability == null)
             return InteractionResult.FAIL;
 
