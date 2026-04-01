@@ -27,7 +27,7 @@ import org.spongepowered.asm.mixin.injection.At;
 
 @Mixin(BottleItem.class)
 public class BottleItemMixin {
-    @WrapOperation(method = "lambda$use$0(Lnet/minecraft/world/entity/AreaEffectCloud;)Z", at = @At(value = "CONSTANT", args = "classValue=net/minecraft/world/entity/boss/enderdragon/EnderDragon"))
+    @WrapOperation(method = "m_289173_", at = @At(value = "CONSTANT", args = "classValue=net/minecraft/world/entity/boss/enderdragon/EnderDragon"), remap = false)
     private static boolean use$checkDragonBreathFluid(Object object, Operation<Boolean> original, AreaEffectCloud aoe) {
         if (aoe.getPersistentData().getBoolean("DragonBreath"))
             return true;
