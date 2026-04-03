@@ -44,7 +44,7 @@ minecraft {
 
         gameTestServer {
             workingDirectory project.file('run/gametest')
-            property 'forge.gameTestServer', 'true'
+            property 'forge.enabledGameTestNamespaces', 'create_dragons_plus'
             args '--nogui'
         }
     }
