@@ -18,29 +18,40 @@
 
 package plus.dragons.createdragonsplus.mixin.garnished;
 
-import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
-import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.simibubi.create.content.kinetics.fan.processing.FanProcessingType;
+import com.simibubi.create.content.kinetics.fan.processing.FanProcessingTypeRegistry;
 import me.fallenbreath.conditionalmixin.api.annotation.Condition;
 import me.fallenbreath.conditionalmixin.api.annotation.Restriction;
-import net.minecraft.core.BlockPos;
-import net.minecraft.world.level.Level;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import plus.dragons.createdragonsplus.config.CDPConfig;
 import plus.dragons.createdragonsplus.integration.ModIntegration;
 
+import java.util.List;
+
+/**
+ * Disables Garnished's fan processing types when CDP's equivalents are active.
+ * <p>
+ * Cannot mixin directly into FanProcessingType (it's an interface in Create 6.0.8).
+ * Instead, hooks into FanProcessingTypeRegistry.init() to remove conflicting types
+ * from the mutable SORTED_TYPES list after all types are registered and sorted.
+ */
 @Restriction(require = @Condition(ModIntegration.Constants.CREATE_GARNISHED))
-@Mixin(value = FanProcessingType.class, remap = false)
+@Mixin(value = FanProcessingTypeRegistry.class, remap = false)
 public abstract class FanProcessingTypeMixinForGarnished {
-    @WrapOperation(method = "getAt", at = @At(value = "INVOKE", target = "Lcom/simibubi/create/content/kinetics/fan/processing/FanProcessingType;isValidAt(Lnet/minecraft/world/level/Level;Lnet/minecraft/core/BlockPos;)Z"))
-    private static boolean ignoreDisabledType(FanProcessingType instance, Level level, BlockPos blockPos, Operation<Boolean> original) {
-        // Check by class name to avoid hard dependency on Garnished classes.
-        // In the original NeoForge code, this checked for Garnished's FreezingFanProcessingType.
-        // Since Garnished registers its own freezing type, we disable it when CDP's freezing is active.
-        String className = instance.getClass().getName();
-        if (className.contains("garnished") && className.contains("Freezing") && CDPConfig.server().enableBulkFreezing.get())
-            return false;
-        return original.call(instance, level, blockPos);
+    @Shadow
+    private static List<FanProcessingType> SORTED_TYPES;
+
+    @Inject(method = "init", at = @At("TAIL"))
+    private static void cdp$removeGarnishedConflicts(CallbackInfo ci) {
+        if (CDPConfig.server().enableBulkFreezing.get()) {
+            SORTED_TYPES.removeIf(type -> {
+                String name = type.getClass().getName();
+                return name.contains("garnished") && name.contains("Freezing");
+            });
+        }
     }
 }

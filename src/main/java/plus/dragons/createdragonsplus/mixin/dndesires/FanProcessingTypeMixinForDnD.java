@@ -18,40 +18,51 @@
 
 package plus.dragons.createdragonsplus.mixin.dndesires;
 
-import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
-import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.simibubi.create.content.kinetics.fan.processing.FanProcessingType;
+import com.simibubi.create.content.kinetics.fan.processing.FanProcessingTypeRegistry;
 import me.fallenbreath.conditionalmixin.api.annotation.Condition;
 import me.fallenbreath.conditionalmixin.api.annotation.Restriction;
-import net.minecraft.core.BlockPos;
-import net.minecraft.world.level.Level;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import plus.dragons.createdragonsplus.config.CDPConfig;
 import plus.dragons.createdragonsplus.integration.ModIntegration;
 
+import java.util.List;
+
+/**
+ * Disables DnD's fan processing types when CDP's equivalents are active.
+ * <p>
+ * Cannot mixin directly into FanProcessingType (it's an interface in Create 6.0.8).
+ * Instead, hooks into FanProcessingTypeRegistry.init() to remove conflicting types
+ * from the mutable SORTED_TYPES list after all types are registered and sorted.
+ * <p>
+ * Version note: On Forge 1.20.1, DnDesires uses package "uwu.lopyluna.create_dd".
+ * The rename to "dev.lopyluna.dndesires" only applies to NeoForge 1.21.1+.
+ */
 @Restriction(require = @Condition(ModIntegration.Constants.CREATE_DND))
-@Mixin(value = FanProcessingType.class, remap = false)
+@Mixin(value = FanProcessingTypeRegistry.class, remap = false)
 public abstract class FanProcessingTypeMixinForDnD {
-    // DnD 0.2c only has FreezingType in IndustrialTypeFanProcessing.
-    // DragonBreathingType and SandingType do not exist in 0.2c but may be added in future versions.
-    // We use class name string matching to avoid ClassNotFoundError and for forward compatibility.
-    //
-    // Version note: On Forge 1.20.1, DnDesires uses package "uwu.lopyluna.create_dd".
-    // The rename to "dev.lopyluna.dndesires" only applies to NeoForge 1.21.1+.
-    // The fully-qualified class name below is correct for the Forge 1.20.1 version of DnD.
-    @WrapOperation(method = "getAt", at = @At(value = "INVOKE", target = "Lcom/simibubi/create/content/kinetics/fan/processing/FanProcessingType;isValidAt(Lnet/minecraft/world/level/Level;Lnet/minecraft/core/BlockPos;)Z"))
-    private static boolean ignoreDisabledType(FanProcessingType instance, Level level, BlockPos blockPos, Operation<Boolean> original) {
-        String className = instance.getClass().getName();
-        if (className.equals("uwu.lopyluna.create_dd.block.BlockProperties.industrial_fan.Processing.IndustrialTypeFanProcessing$FreezingType")
-                && CDPConfig.server().enableBulkFreezing.get())
+    @Shadow
+    private static List<FanProcessingType> SORTED_TYPES;
+
+    @Inject(method = "init", at = @At("TAIL"))
+    private static void cdp$removeDnDConflicts(CallbackInfo ci) {
+        SORTED_TYPES.removeIf(type -> {
+            String className = type.getClass().getName();
+            // DnD 0.2c FreezingType
+            if (className.equals("uwu.lopyluna.create_dd.block.BlockProperties.industrial_fan.Processing.IndustrialTypeFanProcessing$FreezingType")
+                    && CDPConfig.server().enableBulkFreezing.get())
+                return true;
+            // Forward compatibility: DragonBreathing if/when DnD adds it
+            if (className.contains("DragonBreathingType") && CDPConfig.server().enableBulkEnding.get())
+                return true;
+            // Forward compatibility: Sanding if/when DnD adds it
+            if (className.contains("SandingType") && CDPConfig.server().enableBulkSanding.get())
+                return true;
             return false;
-        // Forward compatibility: disable DragonBreathing if/when DnD adds it
-        else if (className.contains("DragonBreathingType") && CDPConfig.server().enableBulkEnding.get())
-            return false;
-        // Forward compatibility: disable Sanding if/when DnD adds it
-        else if (className.contains("SandingType") && CDPConfig.server().enableBulkSanding.get())
-            return false;
-        else return original.call(instance, level, blockPos);
+        });
     }
 }
