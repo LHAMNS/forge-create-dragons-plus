@@ -41,6 +41,12 @@ minecraft {
         server {
             args '--nogui'
         }
+
+        gameTestServer {
+            workingDirectory project.file('run/gametest')
+            property 'forge.gameTestServer', 'true'
+            args '--nogui'
+        }
     }
 }
 
