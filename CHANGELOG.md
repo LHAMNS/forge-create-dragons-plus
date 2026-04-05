@@ -2,6 +2,22 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.0.1-mc1.20.1-fix1] - 2026-04-05
+
+### Fixed
+- **[FATAL] Config access during registry freeze**: `FanProcessingTypeMixinForGarnished` called `CDPConfig.server().enableBulkFreezing.get()` during `FanProcessingTypeRegistry.init()`, before config was loaded. Current Forge logs a warning; future versions will crash in production too. Added `isLoaded()` guard with safe default.
+- **Mixin SRG/MCP dual-environment compatibility** (6 mixins):
+  - `ContraptionMixin`: `@At` target `m_7731_` changed to `setBlock` with `remap = true`
+  - `FluidFillingBehaviourMixin`: `@At` target `m_6263_` changed to `playSound` with `remap = true`
+  - `OpenEndedPipeMixin`: `@At` target `f_63857_` changed to `ultraWarm` with `remap = true`
+  - `AirFlowParticleMixin`: `method` changed to dual-name `{"m_5989_", "tick"}` with `require = 1`
+  - `BottleItemMixin`: `method` changed to dual-name `{"m_289173_", "lambda$use$0"}` with `require = 1`
+  - These mixins previously only worked in production (SRG names); they now work in both dev (MCP) and production (SRG) environments
+
+### Added
+- `CDPRegistryIntegrationTest`: 8 GameTests verifying all 16 dye fluids, Dragon's Breath fluid, Fluid Hatch block, 4 fan processing types, 4 recipe types, DataMap coloring catalysts, config accessibility, and Blaze Upgrade Template registration
+- CEI + CIF as `runtimeOnly fg.deobf()` dependencies in build.gradle for three-mod client integration testing
+
 ## [1.0.0-mc1.20.1] - 2026-03-28
 
 ### Added
