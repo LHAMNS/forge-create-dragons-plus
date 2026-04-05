@@ -47,7 +47,17 @@ public abstract class FanProcessingTypeMixinForGarnished {
 
     @Inject(method = "init", at = @At("TAIL"))
     private static void cdp$removeGarnishedConflicts(CallbackInfo ci) {
-        if (CDPConfig.server().enableBulkFreezing.get()) {
+        // Config may not be loaded yet during registry freeze.
+        // Default to true (remove conflicts) if config is unavailable,
+        // since the feature is enabled by default.
+        boolean freezingEnabled = true;
+        try {
+            if (CDPConfig.SERVER_SPEC.isLoaded()) {
+                freezingEnabled = CDPConfig.server().enableBulkFreezing.get();
+            }
+        } catch (Exception ignored) {
+        }
+        if (freezingEnabled) {
             SORTED_TYPES.removeIf(type -> {
                 String name = type.getClass().getName();
                 return name.contains("garnished") && name.contains("Freezing");

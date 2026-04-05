@@ -72,6 +72,9 @@ repositories {
         url = 'https://maven.fallenbreath.me/releases'
     }
     mavenCentral()
+    // Local JARs for integration testing (deobfuscated by fg.deobf)
+    flatDir { dir "${rootProject.projectDir}/../forge-create-enchantment-industry/build/libs" }
+    flatDir { dir "${rootProject.projectDir}/../forge-create-integrated-farming/build/libs" }
 }
 
 dependencies {
@@ -104,6 +107,10 @@ dependencies {
 
     // Mixin processor
     annotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
+
+    // Integration testing: load CEI and CIF in dev client/server runs
+    runtimeOnly fg.deobf("create_enchantment_industry:create_enchantment_industry:1.3.6-for-create-6.0.8")
+    runtimeOnly fg.deobf("forge-create-integrated-farming:forge-create-integrated-farming:1.0.1-mc1.20.1:all")
 }
 
 mixin {
