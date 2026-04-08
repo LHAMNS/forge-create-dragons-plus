@@ -20,6 +20,8 @@ package plus.dragons.createdragonsplus.data.internal;
 
 import net.createmod.catnip.lang.LangBuilder;
 import net.createmod.catnip.lang.LangNumberFormat;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
 import plus.dragons.createdragonsplus.common.CDPCommon;
 
@@ -39,12 +41,13 @@ public class CDPLang {
     /**
      * Creates a translatable description component.
      * Example: description("recipe", rl) -> "recipe.create_dragons_plus.fan_coloring"
+     * Note: This does NOT add the mod namespace prefix, as the key already includes it.
      */
-    public static LangBuilder description(String type, ResourceLocation id) {
-        return builder().translate(type + "." + id.getNamespace() + "." + id.getPath());
+    public static MutableComponent description(String type, ResourceLocation id) {
+        return Component.translatable(type + "." + id.getNamespace() + "." + id.getPath());
     }
 
-    public static LangBuilder description(String type, ResourceLocation id, String suffix) {
-        return builder().translate(type + "." + id.getNamespace() + "." + id.getPath() + "." + suffix);
+    public static MutableComponent description(String type, ResourceLocation id, String suffix) {
+        return Component.translatable(type + "." + id.getNamespace() + "." + id.getPath() + "." + suffix);
     }
 }

@@ -67,11 +67,11 @@ public class FanSandingCategory extends ProcessingViaFanCategory<SandingRecipe> 
 
     public static FanSandingCategory create() {
         var id = CDPCommon.asResource("fan_sanding");
-        var title = CDPLang.description("recipe", id).component();
+        var title = CDPLang.description("recipe", id);
         var background = new EmptyBackground(178, 72);
         var icon = new Icon();
         var catalyst = AllBlocks.ENCASED_FAN.asStack();
-        catalyst.setHoverName(CDPLang.description("recipe", id, "fan").component().withStyle(style -> style.withItalic(false)));
+        catalyst.setHoverName(CDPLang.description("recipe", id, "fan").withStyle(style -> style.withItalic(false)));
         var info = new Info<>(TYPE, title, background, icon, FanSandingCategory::getAllRecipes, CompatUtility.catalystWithIndustryFan(catalyst));
         return new FanSandingCategory(info);
     }
