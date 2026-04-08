@@ -38,13 +38,13 @@ public class CDPLang {
 
     /**
      * Creates a translatable description component.
-     * Example: description("recipe", rl) -> "create_dragons_plus.recipe.create_dragons_plus.fan_coloring"
+     * Example: description("recipe", rl) -> "recipe.create_dragons_plus.fan_coloring"
      */
     public static LangBuilder description(String type, ResourceLocation id) {
-        return builder().translate(CDPCommon.ID + "." + type + "." + id.getNamespace() + "." + id.getPath());
+        return builder().translate(type + "." + id.getNamespace() + "." + id.getPath());
     }
 
     public static LangBuilder description(String type, ResourceLocation id, String suffix) {
-        return builder().translate(CDPCommon.ID + "." + type + "." + id.getNamespace() + "." + id.getPath() + "." + suffix);
+        return builder().translate(type + "." + id.getNamespace() + "." + id.getPath() + "." + suffix);
     }
 }
