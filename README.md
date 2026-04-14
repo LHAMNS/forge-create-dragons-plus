@@ -2,6 +2,13 @@
 
 A Forge 1.20.1 port of [Create: Dragons Plus](https://github.com/DragonsPlusMinecraft/CreateDragonsPlus), originally developed for NeoForge 1.21.1 by **DragonsPlusMinecraft**.
 
+## Acknowledgements
+
+Thanks to the following contributors for reporting issues and submitting fixes:
+
+- **[@baiyin1223](https://github.com/baiyin1223)** - Discovered and fixed JEI recipe display failure and translation key errors ([#2](https://github.com/LHAMNS/forge-create-dragons-plus/issues/2), [#3](https://github.com/LHAMNS/forge-create-dragons-plus/pull/3))
+- **[@DelsinPRO](https://github.com/DelsinPRO)** - Reported startup crash with Create 6.0.8 ([#1](https://github.com/LHAMNS/forge-create-dragons-plus/issues/1))
+
 This mod extends [Create](https://www.curseforge.com/minecraft/mc-mods/create) with bulk processing via fan mechanics, a pumpable Dragon's Breath fluid, and a Fluid Hatch block.
 
 ## Features
