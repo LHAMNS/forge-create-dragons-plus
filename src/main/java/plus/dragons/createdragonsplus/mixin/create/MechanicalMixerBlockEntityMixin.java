@@ -28,7 +28,7 @@ import java.util.List;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Recipe;
-import net.minecraft.world.item.crafting.RecipeType;
+import com.simibubi.create.AllRecipeTypes;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
@@ -65,7 +65,7 @@ public abstract class MechanicalMixerBlockEntityMixin extends BasinOperatingBloc
                         // Also search for dragon breath fluid recipes from RecipeManager
                         // These are added by UpdateRecipesEvent in CDPRuntimeRecipeProvider
                         var recipeManager = level.getRecipeManager();
-                        var allMixingRecipes = recipeManager.getAllRecipesFor(RecipeType.register("create:mixing"));
+                        var allMixingRecipes = recipeManager.getAllRecipesFor(AllRecipeTypes.MIXING.getType());
                         for (var recipeHolder : allMixingRecipes) {
                             var recipe = recipeHolder;
                             if (recipe instanceof MixingRecipe mixingRecipe) {

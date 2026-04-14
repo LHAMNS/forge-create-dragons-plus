@@ -170,12 +170,13 @@ public class CDPRuntimeRecipeProvider extends RecipeProvider {
                 continue;
             // Build the dragon breath fluid version of the recipe
             var recipeId = CDPCommon.asResource(originalRecipe.getId().getPath() + "_using_dragon_breath_fluid");
-            var recipe = new ProcessingRecipeBuilder<>(MixingRecipe::new, recipeId)
+            var builder = new ProcessingRecipeBuilder<>(MixingRecipe::new, recipeId)
                     .require(CDPFluids.COMMON_TAGS.dragonBreath, 250)
                     .require(FluidIngredient.fromFluidStack(fromFluid))
+                    .require(potionIngredient)
                     .output(toFluid)
-                    .requiresHeat(HeatCondition.HEATED)
-                    .build();
+                    .requiresHeat(HeatCondition.HEATED);
+            var recipe = builder.build();
             event.addRecipe(recipeId, recipe);
         }
     }
