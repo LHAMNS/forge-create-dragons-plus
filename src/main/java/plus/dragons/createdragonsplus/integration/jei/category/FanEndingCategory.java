@@ -59,11 +59,11 @@ public class FanEndingCategory extends ProcessingViaFanCategory<EndingRecipe> {
 
     public static FanEndingCategory create() {
         var id = CDPCommon.asResource("fan_ending");
-        var title = CDPLang.description("recipe", id).component();
+        var title = CDPLang.description("recipe", id);
         var background = new EmptyBackground(178, 72);
         var icon = new DoubleItemIcon(AllItems.PROPELLER::asStack, () -> new ItemStack(Items.DRAGON_BREATH));
         var catalyst = AllBlocks.ENCASED_FAN.asStack();
-        catalyst.setHoverName(CDPLang.description("recipe", id, "fan").component().withStyle(style -> style.withItalic(false)));
+        catalyst.setHoverName(CDPLang.description("recipe", id, "fan").withStyle(style -> style.withItalic(false)));
         var info = new Info<>(TYPE, title, background, icon, FanEndingCategory::getAllRecipes, CompatUtility.catalystWithIndustryFan(catalyst));
         return new FanEndingCategory(info);
     }

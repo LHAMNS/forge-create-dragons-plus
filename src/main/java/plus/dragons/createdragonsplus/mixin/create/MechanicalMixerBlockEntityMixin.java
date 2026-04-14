@@ -21,12 +21,14 @@ package plus.dragons.createdragonsplus.mixin.create;
 import com.llamalad7.mixinextras.sugar.Local;
 import com.simibubi.create.content.fluids.potion.PotionMixingRecipes;
 import com.simibubi.create.content.kinetics.mixer.MechanicalMixerBlockEntity;
+import com.simibubi.create.content.kinetics.mixer.MixingRecipe;
 import com.simibubi.create.content.processing.basin.BasinBlockEntity;
 import com.simibubi.create.content.processing.basin.BasinOperatingBlockEntity;
 import java.util.List;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Recipe;
+import com.simibubi.create.AllRecipeTypes;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
@@ -52,12 +54,28 @@ public abstract class MechanicalMixerBlockEntityMixin extends BasinOperatingBloc
                 for (int i = 0; i < tanks.getTanks(); i++) {
                     var fluid = tanks.getFluidInTank(i);
                     if (fluid.getFluid().is(CDPFluids.COMMON_TAGS.dragonBreath)) {
+                        // First, add recipes from BY_ITEM (original dragon breath item recipes)
                         var recipes = PotionMixingRecipes.BY_ITEM.get(Items.DRAGON_BREATH);
-                        if (recipes == null)
-                            return;
-                        for (var recipe : recipes) {
-                            if (matchBasinRecipe(recipe))
-                                matchingRecipes.add(recipe);
+                        if (recipes != null) {
+                            for (var recipe : recipes) {
+                                if (matchBasinRecipe(recipe))
+                                    matchingRecipes.add(recipe);
+                            }
+                        }
+                        // Also search for dragon breath fluid recipes from RecipeManager
+                        // These are added by UpdateRecipesEvent in CDPRuntimeRecipeProvider
+                        var recipeManager = level.getRecipeManager();
+                        var allMixingRecipes = recipeManager.getAllRecipesFor(AllRecipeTypes.MIXING.getType());
+                        for (var recipeHolder : allMixingRecipes) {
+                            var recipe = recipeHolder;
+                            if (recipe instanceof MixingRecipe mixingRecipe) {
+                                // Check if this is a dragon breath fluid recipe by ID
+                                if (mixingRecipe.getId().getPath().contains("_using_dragon_breath_fluid")) {
+                                    if (matchBasinRecipe(mixingRecipe) && !matchingRecipes.contains(mixingRecipe)) {
+                                        matchingRecipes.add(mixingRecipe);
+                                    }
+                                }
+                            }
                         }
                         return;
                     }

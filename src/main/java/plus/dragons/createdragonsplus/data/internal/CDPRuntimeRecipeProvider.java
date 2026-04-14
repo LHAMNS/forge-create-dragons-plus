@@ -18,22 +18,30 @@
 
 package plus.dragons.createdragonsplus.data.internal;
 
+import java.util.List;
 import java.util.function.Consumer;
+import com.simibubi.create.content.fluids.potion.PotionMixingRecipes;
+import com.simibubi.create.content.kinetics.mixer.MixingRecipe;
+import com.simibubi.create.content.processing.recipe.HeatCondition;
+import com.simibubi.create.content.processing.recipe.ProcessingRecipeBuilder;
+import com.simibubi.create.foundation.fluid.FluidIngredient;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.recipes.FinishedRecipe;
 import net.minecraft.data.recipes.RecipeProvider;
 import net.minecraft.world.item.HoneycombItem;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.level.block.WeatheringCopper;
-import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fml.common.Mod;
 import plus.dragons.createdragonsplus.common.CDPCommon;
 import plus.dragons.createdragonsplus.common.recipe.UpdateRecipesEvent;
 import plus.dragons.createdragonsplus.common.registry.CDPBlocks;
 import plus.dragons.createdragonsplus.common.registry.CDPDataMaps;
+import plus.dragons.createdragonsplus.common.registry.CDPFluids;
 import plus.dragons.createdragonsplus.config.CDPConfig;
 import plus.dragons.createdragonsplus.data.recipe.CreateRecipeBuilders;
 
@@ -97,6 +105,9 @@ public class CDPRuntimeRecipeProvider extends RecipeProvider {
         if (CDPConfig.COMMON.generateSandPaperPolishingRecipeForWaxedBlocks.get()) {
             buildWaxedBlockRecipes(event);
         }
+        if (CDPConfig.COMMON.generateAutomaticBrewingRecipeForDragonBreathFluid.get()) {
+            buildDragonBreathFluidRecipes(event);
+        }
     }
 
     private static void buildOxidizedBlockRecipes(UpdateRecipesEvent event) {
@@ -132,4 +143,42 @@ public class CDPRuntimeRecipeProvider extends RecipeProvider {
             event.addRecipe(recipeId, recipe);
         });
     }
+
+    private static void buildDragonBreathFluidRecipes(UpdateRecipesEvent event) {
+        List<MixingRecipe> dragonBreathRecipes = PotionMixingRecipes.BY_ITEM.get(Items.DRAGON_BREATH);
+        if (dragonBreathRecipes == null || dragonBreathRecipes.isEmpty()) {
+            return;
+        }
+        for (MixingRecipe originalRecipe : dragonBreathRecipes) {
+            // Get the original recipe's ingredients and output
+            var ingredients = originalRecipe.getIngredients();
+            var fluidIngredients = originalRecipe.getFluidIngredients();
+            var fluidResults = originalRecipe.getFluidResults();
+            if (fluidIngredients.isEmpty() || fluidResults.isEmpty())
+                continue;
+            var fromFluid = fluidIngredients.get(0).getMatchingFluidStacks().get(0);
+            var toFluid = fluidResults.get(0);
+            // Find the potion ingredient (non-dragon breath)
+            Ingredient potionIngredient = null;
+            for (var ingredient : ingredients) {
+                if (!ingredient.test(new net.minecraft.world.item.ItemStack(Items.DRAGON_BREATH))) {
+                    potionIngredient = ingredient;
+                    break;
+                }
+            }
+            if (potionIngredient == null)
+                continue;
+            // Build the dragon breath fluid version of the recipe
+            var recipeId = CDPCommon.asResource(originalRecipe.getId().getPath() + "_using_dragon_breath_fluid");
+            var builder = new ProcessingRecipeBuilder<>(MixingRecipe::new, recipeId)
+                    .require(CDPFluids.COMMON_TAGS.dragonBreath, 250)
+                    .require(FluidIngredient.fromFluidStack(fromFluid))
+                    .require(potionIngredient)
+                    .output(toFluid)
+                    .requiresHeat(HeatCondition.HEATED);
+            var recipe = builder.build();
+            event.addRecipe(recipeId, recipe);
+        }
+    }
+
 }

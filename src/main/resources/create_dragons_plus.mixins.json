@@ -16,7 +16,6 @@
     "create.MechanicalMixerBlockEntityMixin",
     "create.OpenEndedPipeMixin",
     "create.OpenEndFluidHandlerMixin",
-    "create.PotionMixingRecipesMixin",
     "minecraft.BottleItemMixin",
     "minecraft.ConcretePowderBlockMixin",
     "minecraft.RecipeManagerAccessor",
