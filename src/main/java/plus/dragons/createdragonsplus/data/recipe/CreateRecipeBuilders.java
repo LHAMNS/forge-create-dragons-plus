@@ -38,6 +38,8 @@ import com.simibubi.create.content.processing.sequenced.SequencedAssemblyRecipeB
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.ItemLike;
 
+import plus.dragons.createdragonsplus.common.kinetics.fan.sanding.SandingRecipe;
+
 public class CreateRecipeBuilders {
     public static ProcessingRecipeBuilder<CrushingRecipe> crushing(ResourceLocation id) {
         return new ProcessingRecipeBuilder<>(CrushingRecipe::new, id);
@@ -65,6 +67,10 @@ public class CreateRecipeBuilders {
 
     public static ProcessingRecipeBuilder<SandPaperPolishingRecipe> polishing(ResourceLocation id) {
         return new ProcessingRecipeBuilder<>(SandPaperPolishingRecipe::new, id);
+    }
+
+    public static ProcessingRecipeBuilder<SandingRecipe> sanding(ResourceLocation id) {
+        return new ProcessingRecipeBuilder<>(SandingRecipe::new, id);
     }
 
     public static ProcessingRecipeBuilder<SplashingRecipe> splashing(ResourceLocation id) {

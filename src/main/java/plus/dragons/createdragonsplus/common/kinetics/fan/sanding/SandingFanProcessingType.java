@@ -5,7 +5,6 @@
  */
 package plus.dragons.createdragonsplus.common.kinetics.fan.sanding;
 
-import com.simibubi.create.AllRecipeTypes;
 import com.simibubi.create.AllSoundEvents;
 import com.simibubi.create.content.kinetics.fan.processing.FanProcessingType;
 import com.simibubi.create.foundation.recipe.RecipeApplier;
@@ -38,7 +37,7 @@ import java.util.Set;
 /**
  * Sanding fan processing type. Implements {@link DynamicParticleFanProcessingType} directly,
  * matching the upstream NeoForge structure. Uses {@link DeferredHolder} for
- * Create DnD compat lookups, and includes sandpaper polishing fallback.
+ * Create DnD compat lookups.
  */
 public class SandingFanProcessingType implements DynamicParticleFanProcessingType<SandingFanProcessingType.ParticleData> {
     private final RecipeWrapper reusableWrapper = new RecipeWrapper(new net.minecraftforge.items.ItemStackHandler(1));
@@ -76,9 +75,6 @@ public class SandingFanProcessingType implements DynamicParticleFanProcessingTyp
         var recipe = level.getRecipeManager()
                 .getRecipeFor(CDPRecipes.SANDING.getType(), reusableWrapper, level);
         if (recipe.isPresent()) return true;
-        if (AllRecipeTypes.SANDPAPER_POLISHING.find(reusableWrapper, level)
-                .filter(AllRecipeTypes.CAN_BE_AUTOMATED)
-                .isPresent()) return true;
         return canProcessByCompatRecipe(createDNDRecipe, stack, level);
     }
 
@@ -90,11 +86,6 @@ public class SandingFanProcessingType implements DynamicParticleFanProcessingTyp
                 .getRecipeFor(CDPRecipes.SANDING.getType(), reusableWrapper, level);
         if (recipe.isPresent()) {
             return RecipeApplier.applyRecipeOn(level, stack, recipe.get(), true);
-        }
-        var polishingRecipe = AllRecipeTypes.SANDPAPER_POLISHING.find(reusableWrapper, level)
-                .filter(AllRecipeTypes.CAN_BE_AUTOMATED);
-        if (polishingRecipe.isPresent()) {
-            return RecipeApplier.applyRecipeOn(level, stack, polishingRecipe.get(), true);
         }
         Optional<List<ItemStack>> dndResult = processByCompatRecipe(createDNDRecipe, stack, level);
         return dndResult.orElse(null);
