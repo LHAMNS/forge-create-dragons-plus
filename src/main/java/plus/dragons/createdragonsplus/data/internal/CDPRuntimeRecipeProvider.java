@@ -20,6 +20,8 @@ package plus.dragons.createdragonsplus.data.internal;
 
 import java.util.List;
 import java.util.function.Consumer;
+import com.simibubi.create.AllRecipeTypes;
+import com.simibubi.create.content.equipment.sandPaper.SandPaperPolishingRecipe;
 import com.simibubi.create.content.fluids.potion.PotionMixingRecipes;
 import com.simibubi.create.content.kinetics.mixer.MixingRecipe;
 import com.simibubi.create.content.processing.recipe.HeatCondition;
@@ -33,11 +35,13 @@ import net.minecraft.world.item.HoneycombItem;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.Recipe;
+import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.block.WeatheringCopper;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fml.common.Mod;
 import plus.dragons.createdragonsplus.common.CDPCommon;
+import plus.dragons.createdragonsplus.common.kinetics.fan.sanding.SandingRecipe;
 import plus.dragons.createdragonsplus.common.recipe.UpdateRecipesEvent;
 import plus.dragons.createdragonsplus.common.registry.CDPBlocks;
 import plus.dragons.createdragonsplus.common.registry.CDPDataMaps;
@@ -86,6 +90,11 @@ public class CDPRuntimeRecipeProvider extends RecipeProvider {
                             .require(baseItem)
                             .output(polishedItem)
                             .build(output);
+                    var sandingId = CDPCommon.asResource(baseId.toString().replace(':', '/') + "_sanding");
+                    CreateRecipeBuilders.sanding(sandingId)
+                            .require(baseItem)
+                            .output(polishedItem)
+                            .build(output);
                 });
     }
 
@@ -108,6 +117,7 @@ public class CDPRuntimeRecipeProvider extends RecipeProvider {
         if (CDPConfig.COMMON.generateAutomaticBrewingRecipeForDragonBreathFluid.get()) {
             buildDragonBreathFluidRecipes(event);
         }
+        buildSandingFromPolishingRecipes(event);
     }
 
     private static void buildOxidizedBlockRecipes(UpdateRecipesEvent event) {
@@ -124,6 +134,12 @@ public class CDPRuntimeRecipeProvider extends RecipeProvider {
                     .output(previousItem)
                     .build();
             event.addRecipe(recipeId, recipe);
+            var sandingId = CDPCommon.asResource(oxidizedId.toString().replace(':', '/') + "_sanding");
+            Recipe<?> sandingRecipe = CreateRecipeBuilders.sanding(sandingId)
+                    .require(oxidizedItem)
+                    .output(previousItem)
+                    .build();
+            event.addRecipe(sandingId, sandingRecipe);
         });
     }
 
@@ -141,6 +157,12 @@ public class CDPRuntimeRecipeProvider extends RecipeProvider {
                     .output(unwaxedItem)
                     .build();
             event.addRecipe(recipeId, recipe);
+            var sandingId = CDPCommon.asResource(waxedId.toString().replace(':', '/') + "_sanding");
+            Recipe<?> sandingRecipe = CreateRecipeBuilders.sanding(sandingId)
+                    .require(waxedItem)
+                    .output(unwaxedItem)
+                    .build();
+            event.addRecipe(sandingId, sandingRecipe);
         });
     }
 
@@ -179,6 +201,22 @@ public class CDPRuntimeRecipeProvider extends RecipeProvider {
             var recipe = builder.build();
             event.addRecipe(recipeId, recipe);
         }
+    }
+
+    /**
+     * Converts all registered {@code SANDPAPER_POLISHING} recipes into corresponding
+     * {@code SANDING} recipes, so that the attribute filter and
+     * {@link plus.dragons.createdragonsplus.common.kinetics.fan.sanding.SandingFanProcessingType#canProcess}
+     * can detect "sanding-capable" items that only have sandpaper polishing recipes
+     * (e.g., Rose Quartz → Polished Rose Quartz).
+     */
+    @SuppressWarnings("unchecked")
+    private static void buildSandingFromPolishingRecipes(UpdateRecipesEvent event) {
+        event.getRecipesForType(AllRecipeTypes.SANDPAPER_POLISHING.<RecipeType<SandPaperPolishingRecipe>>getType())
+                .stream()
+                .filter(AllRecipeTypes.CAN_BE_AUTOMATED)
+                .map(SandingRecipe::convertSandPaperPolishing)
+                .forEach(recipe -> event.addRecipe(recipe.getId(), recipe));
     }
 
 }

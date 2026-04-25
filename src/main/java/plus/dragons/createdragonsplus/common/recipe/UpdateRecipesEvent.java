@@ -33,6 +33,7 @@ import org.slf4j.Logger;
 import plus.dragons.createdragonsplus.mixin.minecraft.RecipeManagerAccessor;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -64,6 +65,22 @@ public class UpdateRecipesEvent extends Event {
         this.recipeManager = recipeManager;
         this.byType = byType;
         this.byName = byName;
+    }
+
+    /**
+     * Returns all recipes of the given type from the current recipe set.
+     * <p>
+     * This includes any recipes added by earlier handlers of this event.
+     *
+     * @param type the recipe type to query
+     * @param <C>  the recipe type
+     * @return an unmodifiable list of recipes of the given type
+     */
+    @SuppressWarnings("unchecked")
+    public <C extends Recipe<?>> List<C> getRecipesForType(RecipeType<C> type) {
+        Map<ResourceLocation, Recipe<?>> typeMap = byType.get(type);
+        if (typeMap == null) return List.of();
+        return (List<C>) List.copyOf(typeMap.values());
     }
 
     /**
